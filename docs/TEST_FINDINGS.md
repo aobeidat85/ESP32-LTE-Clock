@@ -59,6 +59,11 @@ Python (49 passed in 66.69 seconds). Its standalone example built successfully
 with the pinned PlatformIO configuration: 726,573 bytes of flash and 43,228 bytes
 of static RAM, excluding dynamic workspace and the reserved capture aperture.
 The link map confirms all three SRAM overlap assertions were applied.
+An independent application also installed the public GitHub library through
+`lib_deps` and built successfully, without referencing the original experiment
+checkout or adding its own linker script.
+GitHub Actions also passed the Linux native-test and ESP32 firmware-build jobs
+([validation run](https://github.com/aobeidat85/ESP32-LTE-Clock/actions/runs/41767439026)).
 
 The tests cover:
 
@@ -69,6 +74,10 @@ The tests cover:
 - Missing/constant/noise/nonfinite input rejection and malformed/truncated RRC.
 - Leap-second transitions and expiry, reset/stale monotonic references, SFN wrap
   and the SI-window reference boundary.
+
+On the recorded coarse-frequency acquisition vector, MSVC and GCC can choose
+adjacent correlation-peak samples. The test permits one 1.92 MS/s sample of
+timing difference while requiring identical CRC-valid MIB fields.
 
 Firmware builds use the pinned board/core configuration and SRAM linker guards.
 The [simple example](../examples/SetUtcOnBoot/SetUtcOnBoot.ino) contains no replay
