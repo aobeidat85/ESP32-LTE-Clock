@@ -61,6 +61,7 @@ class Esp32LteClock {
   uint32_t scanCursor_ = 0; // Continues across timeout/retry on this instance.
   uint16_t activeTuningMHz_ = 0;
   double activeCarrierHz_ = 0;
+  bool timeScheduleFound_ = false;
   double phase_ = 0, period_ = 10000.2459, carrier_ = 0;
   uint16_t pci_ = 0, sfn_ = 0;
   bool expired() const;

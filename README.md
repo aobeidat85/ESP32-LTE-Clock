@@ -112,8 +112,10 @@ frequency or PCI in the default configuration. Blind PSS correlations use FFTs;
 all 504 PCI values are eligible through SSS correlation.
 
 Defaults take 24 snapshots per frequency and allow up to 180 seconds for an
-individual attempt, with up to three fresh attempts per discovered PCI before
-moving on. A verified unsupported profile or time schedule is skipped immediately.
+individual attempt, with up to three acquisition attempts per discovered PCI
+before moving on. A verified unsupported profile or time schedule is skipped
+immediately. A cell that advertises time but exhausts its scheduled time attempts
+yields to another PCI on that carrier instead of consuming every retry budget.
 Rejected PCIs are skipped for the remainder of that dwell, so another cell can
 be considered. Multiple scans or a long search may be needed;
 a full raster scan can take hours. The timeout is checked between bounded DSP

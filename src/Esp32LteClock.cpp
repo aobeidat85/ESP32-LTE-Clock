@@ -119,7 +119,7 @@ bool Esp32LteClock::receiveTime(const uint32_t* words,uint64_t stamp,Sync found)
     if(r!=Result::Ok)continue;
     r=parseSib1Schedule(payload,bytes,schedule);
     if(r==Result::NoTime){report(ClockStatus::UnsupportedCell);break;}
-    if(r==Result::Ok){evidence_.cellId=schedule.cellId;hasSchedule=true;break;}
+    if(r==Result::Ok){evidence_.cellId=schedule.cellId;hasSchedule=true;timeScheduleFound_=true;break;}
   }
   if(!hasSchedule)return false;
   for(unsigned attempt=0;attempt<16&&!expired();++attempt){
@@ -215,6 +215,7 @@ bool Esp32LteClock::sync(uint32_t timeoutMs,const ClockConfig& config,ClockProgr
       if(slot==attemptedCount&&attemptedCount<32)attemptedPci[attemptedCount++]=pci_;
       if(slot<32)++attempts[slot];
       evidence_.cellId=0;
+      timeScheduleFound_=false;
       evidence_.pssScore=found.pssScore;evidence_.sssScore=found.sssScore;
       cellDeadline_=esp_timer_get_time()+int64_t(config.cellTimeoutMs)*1000;
       if(receiveTime(words,stamp,found)){
@@ -222,9 +223,14 @@ bool Esp32LteClock::sync(uint32_t timeoutMs,const ClockConfig& config,ClockProgr
       }
       ++evidence_.rejectedCells;
       if(config.autoScan){
-        const bool reject=status_==ClockStatus::UnsupportedCell||slot>=32||
+        const bool reject=status_==ClockStatus::UnsupportedCell||timeScheduleFound_||slot>=32||
                           attempts[slot]>=config.cellAttempts;
-        if(reject){if(excludedCount<32)excluded[excludedCount++]=pci_;}
+        if(reject){
+          if(excludedCount<32)excluded[excludedCount++]=pci_;
+          // A cell that advertised time but exhausted its SI attempts must
+          // yield to another PCI, rather than consuming every retry budget.
+          if(timeScheduleFound_)dwell=0;
+        }
         else dwell=0; // Fade/CRC failure: bounded fresh discovery on this carrier.
       }
       cellDeadline_=0;

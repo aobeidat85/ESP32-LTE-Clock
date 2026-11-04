@@ -24,8 +24,10 @@ carrier/PCI hints. The full deterministic plan contains 2,730 distinct 100 kHz
 points over five reachable FDD downlink ranges. It tries 5 MHz centers first,
 then all other raster points. Each frequency gets 24 snapshots; a candidate gets
 up to 180 seconds per attempt for fresh MIBs, SIB1 scheduling and SIB8 time.
-Fading/CRC failures permit up to three attempts per discovered PCI; a verified
-unsupported profile or schedule is excluded immediately. A timeout/retry
+Fading/CRC failures permit up to three acquisition attempts per discovered PCI;
+a verified unsupported profile or schedule is excluded immediately. After a cell
+advertises time but exhausts its time-reading attempt, another PCI on the same
+carrier gets a fresh dwell. A timeout/retry
 continues the scan cursor. These limits bound attempts, not total acquisition
 time; a complete raster search can take hours.
 
@@ -49,7 +51,7 @@ observations. These are software-reset tests, not physical power-off tests.
 
 Both the Linux native-test and ESP32 firmware-build jobs passed on GitHub
 ([v0.2 implementation validation](https://github.com/aobeidat85/ESP32-LTE-Clock/actions/runs/41769112164)).
-The release example uses 730,837 bytes of flash and 43,284 bytes of static RAM;
+The release example uses 730,869 bytes of flash and 43,284 bytes of static RAM;
 dynamic workspace is approximately 141 KB, including the 40 KB IRAM arena.
 All three capture-SRAM overlap assertions remain present in the link map.
 
@@ -93,7 +95,7 @@ sanity checks, not a calibrated time-transfer measurement. Reception quality,
 placement and carrier broadcasts affect whether and how quickly synchronization
 succeeds. Failed attempts are retained in the findings rather than hidden.
 
-## Standalone package validation
+## v0.1 standalone package validation
 
 The extracted **SetUtcOnBoot example also synchronized from live RF on the same
 board** after an upload reset. Its first attempt timed out; the automatic retry
