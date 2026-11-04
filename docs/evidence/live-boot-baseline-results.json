@@ -1,0 +1,46 @@
+{
+  "kind": "live on-device LTE boot clock; not a replay",
+  "board": "ESP32-D0WD-V3 revision 3.1",
+  "receive_hardware": "Original ESP32 and onboard antenna; USB supplies power and diagnostic output",
+  "host_decoding_required_for_clock": false,
+  "host_clock_sent_to_device": false,
+  "observer": "monitor_boot.py (RTS reset and reads only; zero serial data bytes sent)",
+  "replay_marker_present": false,
+  "pci": 284,
+  "cell_id": 45012513,
+  "captures": 22,
+  "mibs": 2,
+  "sync_uptime_seconds": 285.674,
+  "earlier_timeouts": 1,
+  "time_payload_hex": "008ec40a370c463170a0992188c62e08e2c504010e4631b0471a200e74b2318d8440018176130440400dd91342d1562400680308000000",
+  "gps_ticks": 147779627716,
+  "gps_calendar": "2026-11-04T02:57:57.160000",
+  "decoded_utc_at_reference": "2026-11-04T02:57:39.160000+00:00",
+  "firmware_utc_at_reference_us": 1793761059160000,
+  "independent_payload_and_utc_match": true,
+  "gps_minus_utc_seconds": 18,
+  "leap_table_expires": "2027-06-28",
+  "si_window_reference_device_uptime_us": 283846666,
+  "approximate_reference_age_at_clock_set_s": 1.827,
+  "frame_period_device_us": 10000.24318609,
+  "heap_after_radio_and_workspace_release": 233028,
+  "holdover_output": [
+    "UTC 2026-11-04T02:57:41Z (holdover; radio released)",
+    "UTC 2026-11-04T02:57:42Z (holdover; radio released)",
+    "UTC 2026-11-04T02:57:43Z (holdover; radio released)"
+  ],
+  "display_minus_host_receipt_seconds": [
+    0.322,
+    0.324,
+    0.324
+  ],
+  "absolute_utc_accuracy_measured": false,
+  "accuracy_note": "Host receipt comparison is a coarse sanity check, not calibrated time-transfer accuracy.",
+  "reset_note": "Observed fresh hardware-reset boot; a separate controlled removal of 5V was not performed.",
+  "firmware_artifact_sha256": "28f4a6fcb58dd8138f462fd28cb4bb1f88dccb383781863f40c99eda7cfe5148",
+  "log_sha256": {
+    "boot-08-final.jsonl": "1501b7ae67ee51d47e5afc0316e5f4b69e2d730805d28ff750210619e1ab5853",
+    "boot-08-final-continuation.jsonl": "221389e03790841d7025efec3565d3fc4ebd6bc44eb271d0a4c1ad6adcd6f1d9"
+  },
+  "public_copy_note": "Device MAC omitted. Source hashes and hardware results refer to the tested integrated prototype before standalone-library extraction."
+}

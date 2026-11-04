@@ -1,0 +1,21 @@
+{
+  "kind": "recorded ESP32 RF replay; not a live synchronization",
+  "raw_batch": "lte-time-retry-pci284-si8-01",
+  "raw_file": "lo2149-gain68-077.npz",
+  "raw_sha256": "8da9631055ed70deaed0c9c06ca066ea981e20b9fe275b783443608c78d07a5f",
+  "pci": 284,
+  "subframe": 0,
+  "transport_bits": 440,
+  "rv": 0,
+  "dci_bits": "100111010111101100000000000",
+  "payload_hex": "008ec40a370c463170a0992188c62e08e2c504010e4631b0471a200e74b2318d8440018176130440400dd91341dffc2400680308000000",
+  "llr_scale": 4,
+  "llr_count": 8208,
+  "ticks": 147777650564,
+  "unix_us": 1793741287640000,
+  "fixture_sha256": {
+    "sib8-pdsch.i8": "41ad80acc28bd588a7c48b77620519c03836fe1faf8d68b0d1417bee5de5015c",
+    "sib8-control.f32": "f837bf706fbc67cb7e0510c631596ddee348c087e57bfbc6d85215de80e19d35",
+    "sib8-payload.bin": "e150d143c1baccbfe24f5187d87b06b78df4164b52d960aae54a3c2fe6e526d7"
+  }
+}

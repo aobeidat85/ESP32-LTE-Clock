@@ -1,0 +1,5 @@
+numpy>=1.26,<3
+scipy>=1.12,<2
+matplotlib>=3.9,<4
+pycrate==0.8.1
+pytest>=8,<10

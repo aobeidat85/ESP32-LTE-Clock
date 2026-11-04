@@ -1,0 +1,12 @@
+.pio/
+build/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.obj
+*.ino.cpp
+*.exe
+.env
+secrets.h
+local-captures/

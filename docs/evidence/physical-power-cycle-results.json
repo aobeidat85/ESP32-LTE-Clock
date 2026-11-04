@@ -1,0 +1,59 @@
+{
+  "kind": "live on-device LTE boot clock; not a replay",
+  "board": "ESP32-D0WD-V3 revision 3.1",
+  "receive_hardware": "Original ESP32 and onboard antenna; USB supplies power and diagnostic output",
+  "host_decoding_required_for_clock": false,
+  "host_clock_sent_to_device": false,
+  "observer": "monitor_boot.py --no-reset (reads only; zero serial data bytes sent)",
+  "replay_marker_present": false,
+  "pci": 284,
+  "cell_id": 45012513,
+  "captures": 90,
+  "mibs": 4,
+  "sync_uptime_seconds": 137.384,
+  "earlier_timeouts": 0,
+  "time_payload_hex": "008ec40a370c463170a0992188c62e08e2c504010e4631b0471a200e74b2318d8440018176130440400dd91342dbfc2400680308000000",
+  "gps_ticks": 147779714948,
+  "gps_calendar": "2026-11-04T03:12:29.480000",
+  "decoded_utc_at_reference": "2026-11-04T03:12:11.480000+00:00",
+  "firmware_utc_at_reference_us": 1793761931480000,
+  "independent_payload_and_utc_match": true,
+  "gps_minus_utc_seconds": 18,
+  "leap_table_expires": "2027-06-28",
+  "si_window_reference_device_uptime_us": 136596309,
+  "approximate_reference_age_at_clock_set_s": 0.788,
+  "frame_period_device_us": 10000.248443487,
+  "heap_after_radio_and_workspace_release": 233028,
+  "holdover_output": [
+    "UTC 2026-11-04T03:12:12Z (holdover; radio released)",
+    "UTC 2026-11-04T03:12:13Z (holdover; radio released)",
+    "UTC 2026-11-04T03:12:14Z (holdover; radio released)"
+  ],
+  "display_minus_host_receipt_seconds": [
+    0.057,
+    0.06,
+    0.06
+  ],
+  "absolute_utc_accuracy_measured": false,
+  "accuracy_note": "Host receipt comparison is a coarse sanity check, not calibrated time-transfer accuracy.",
+  "reset_note": "User confirmed USB power removal and reconnection; original USB bridge disappearance and reappearance were observed. No software reset was issued for this observation.",
+  "firmware_artifact_sha256": "15cb950d10a90610558ff89fe26c56a92ffe9e899a4e0b39910c95cb961b9261",
+  "log_sha256": {
+    "boot-10-physical-power-cycle.jsonl": "42f907ffb6aa8e1bfb3b79f483992e207ce550ac6fd8468ff62259a79933fdb7"
+  },
+  "power_cycle_confirmed_by_user": true,
+  "current_source_sha256": {
+    "Esp32LteClock.cpp": "5cfa4c83faa6ea84a60c703efb0dc0a2638d2f162bc26797a535f464dbf5baba",
+    "Esp32LteClock.h": "f33a0434d9d565fde8044c2175c3130f9065f674e9795f51a828235b60d8f5f9",
+    "Esp32HarmonicRx.cpp": "7a04017b8d68228128c49e7623594533465c2698899a4159850b547773847fa3",
+    "Esp32HarmonicRx.h": "0def27024b810e2f7ce88d0a02915e198041163e909947cabcaf4ae1119190bc",
+    "LteRfDecoder.cpp": "e0c948bb2ca07ce39a6aaace28f4d6e0cf3ed69283f9b4d6abfedcd072d4baa7",
+    "LteRfDecoder.h": "b29c49641eba72fa62ca1c050411ef237cd8c34be56a35470fef41e24aaf0c19",
+    "LteRfFir.inc": "d1e07785c5119cca3db0eeb8768a13fafdf394db7b63f8b1811d4b06379c3b61",
+    "LteTimeDecoder.cpp": "07777d075b893bd2e696e168d38c8e508d73b932fccc398d14fc866830fc35a7",
+    "LteTimeDecoder.h": "2d7f94f144b776ff40cd8c8bdf784117b5051a6db5c340ff59668fe9d371f411",
+    "LteTimeClock.h": "0ef845a585cab166c78e5f6b6f81d5167d6573950be4a25422a33447fbfde300",
+    "LteTimeTables.inc": "ac37b2db45056813bde1a7c5c1cfc05c5f9c715786269a2c6f0ec54fc2bffa53"
+  },
+  "public_copy_note": "Device MAC omitted. Source hashes and hardware results refer to the tested integrated prototype before standalone-library extraction."
+}

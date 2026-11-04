@@ -1,0 +1,224 @@
+{
+  "metadata": {
+    "source": "hardware-unverified-rf",
+    "requested_tuning_hz": 2149000000,
+    "gain_index_requested": 68,
+    "capture_elapsed_us": 1024,
+    "capture_start_uptime_us": 350012491,
+    "capture_clock_session_id": "b44aac20-431e-4ee3-98e5-b8333e228295",
+    "wire_header_crc_verified": true,
+    "scheduled_target_uptime_us": 350012491,
+    "trigger_error_us": 0,
+    "expected_subframe": 0,
+    "expected_sfn": 49,
+    "host_received_utc": "2026-11-03T21:24:56.127070+00:00",
+    "antenna": "onboard only; unchanged placement",
+    "continuous_with_other_captures": false,
+    "iq_convention": "high10+j*low10",
+    "pll_lock_verified": false,
+    "scheduling_clock": "device uptime aligned to decoded LTE PSS/SSS/MIB; not UTC",
+    "sha256": "cbac51743dc93ba8e4805580f050c982f19d4fe9c7a96043b95a2dcbe0231b1e",
+    "schema": "harmonic-raw-v1",
+    "sample_rate_nominal_hz": 16000000,
+    "sample_count": 16380,
+    "snappnt_version": "0.1.0"
+  },
+  "expected": {
+    "file": "lo2149-gain68-010.npz",
+    "trigger_error_us": 0,
+    "candidate": {
+      "pss_score": 0.33460723368221107,
+      "pss_start": 853,
+      "nid2": 2,
+      "cfo_hz": 0.0,
+      "center_hz_hypothesis": 2149947132.8,
+      "rf_sign_hypothesis": 1,
+      "tracker": "known PCI 284 and measured CFO",
+      "secondary": {
+        "sss_score": 0.3237307576094287,
+        "pci_hypothesis": 284,
+        "subframe_hypothesis": 0,
+        "symbol_spacing": 137
+      }
+    },
+    "fine_frequency": {
+      "residual_cfo_hz": -570.2959501029209,
+      "carrier_nominal_hz": 2149946562.5040503
+    },
+    "pbch": {
+      "status": "CRC-verified MIB",
+      "mib": {
+        "payload_bits": "011010000011000000000000",
+        "resource_blocks": 50,
+        "bandwidth_mhz": 10,
+        "phich_duration": "normal",
+        "phich_resource": 1,
+        "system_frame_number": 49,
+        "antenna_ports": 4,
+        "crc16_verified": true,
+        "utc_time": null,
+        "date": null,
+        "utc_offset": null
+      },
+      "residual_cfo_hz": -570.2959501029209,
+      "attempts": [
+        {
+          "antenna_ports": 1,
+          "phase": 0,
+          "weighting": "uniform",
+          "crc16_verified": false,
+          "accepted_legacy_layout": false
+        },
+        {
+          "antenna_ports": 1,
+          "phase": 1,
+          "weighting": "uniform",
+          "crc16_verified": false,
+          "accepted_legacy_layout": false
+        },
+        {
+          "antenna_ports": 1,
+          "phase": 2,
+          "weighting": "uniform",
+          "crc16_verified": false,
+          "accepted_legacy_layout": false
+        },
+        {
+          "antenna_ports": 1,
+          "phase": 3,
+          "weighting": "uniform",
+          "crc16_verified": false,
+          "accepted_legacy_layout": false
+        },
+        {
+          "antenna_ports": 1,
+          "phase": 0,
+          "weighting": "channel-power",
+          "crc16_verified": false,
+          "accepted_legacy_layout": false
+        },
+        {
+          "antenna_ports": 1,
+          "phase": 1,
+          "weighting": "channel-power",
+          "crc16_verified": false,
+          "accepted_legacy_layout": false
+        },
+        {
+          "antenna_ports": 1,
+          "phase": 2,
+          "weighting": "channel-power",
+          "crc16_verified": false,
+          "accepted_legacy_layout": false
+        },
+        {
+          "antenna_ports": 1,
+          "phase": 3,
+          "weighting": "channel-power",
+          "crc16_verified": false,
+          "accepted_legacy_layout": false
+        },
+        {
+          "antenna_ports": 2,
+          "phase": 0,
+          "weighting": "uniform",
+          "crc16_verified": false,
+          "accepted_legacy_layout": false
+        },
+        {
+          "antenna_ports": 2,
+          "phase": 1,
+          "weighting": "uniform",
+          "crc16_verified": false,
+          "accepted_legacy_layout": false
+        },
+        {
+          "antenna_ports": 2,
+          "phase": 2,
+          "weighting": "uniform",
+          "crc16_verified": false,
+          "accepted_legacy_layout": false
+        },
+        {
+          "antenna_ports": 2,
+          "phase": 3,
+          "weighting": "uniform",
+          "crc16_verified": false,
+          "accepted_legacy_layout": false
+        },
+        {
+          "antenna_ports": 2,
+          "phase": 0,
+          "weighting": "channel-power",
+          "crc16_verified": false,
+          "accepted_legacy_layout": false
+        },
+        {
+          "antenna_ports": 2,
+          "phase": 1,
+          "weighting": "channel-power",
+          "crc16_verified": false,
+          "accepted_legacy_layout": false
+        },
+        {
+          "antenna_ports": 2,
+          "phase": 2,
+          "weighting": "channel-power",
+          "crc16_verified": false,
+          "accepted_legacy_layout": false
+        },
+        {
+          "antenna_ports": 2,
+          "phase": 3,
+          "weighting": "channel-power",
+          "crc16_verified": false,
+          "accepted_legacy_layout": false
+        },
+        {
+          "antenna_ports": 4,
+          "phase": 0,
+          "weighting": "uniform",
+          "crc16_verified": false,
+          "accepted_legacy_layout": false
+        },
+        {
+          "antenna_ports": 4,
+          "phase": 1,
+          "weighting": "uniform",
+          "crc16_verified": false,
+          "accepted_legacy_layout": false
+        },
+        {
+          "antenna_ports": 4,
+          "phase": 2,
+          "weighting": "uniform",
+          "crc16_verified": false,
+          "accepted_legacy_layout": false
+        },
+        {
+          "antenna_ports": 4,
+          "phase": 3,
+          "weighting": "uniform",
+          "crc16_verified": false,
+          "accepted_legacy_layout": false
+        },
+        {
+          "antenna_ports": 4,
+          "phase": 0,
+          "weighting": "channel-power",
+          "crc16_verified": false,
+          "accepted_legacy_layout": false
+        },
+        {
+          "antenna_ports": 4,
+          "phase": 1,
+          "weighting": "channel-power",
+          "crc16_verified": true,
+          "accepted_legacy_layout": true
+        }
+      ]
+    },
+    "phase_error_us": 2.7368817925453186,
+    "decoded_pci": 284
+  }
+}
