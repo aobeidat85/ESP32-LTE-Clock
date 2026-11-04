@@ -78,6 +78,13 @@ bank. Insufficient memory or an unsupported configuration returns failure.
 
 ## Test findings
 
+A two-pass **AT&T search did not identify an AT&T cell or recover AT&T UTC**.
+It covered 66 coarse frequency points per pass, with 801 capture attempts total;
+the accepted identities were T-Mobile's 310-260. This was not a complete LTE
+raster survey, and lower bands were outside the receiver's range. The result
+does not establish whether AT&T broadcasts time. See
+[the AT&T survey findings](docs/TEST_FINDINGS.md#att-coarse-identity-search-no-att-cell-verified).
+
 A targeted **T-Mobile retry did not recover UTC**. Fresh SIB1 from PLMN 310-260
 at 2140 MHz / PCI 242 advertised neither SIB8 nor SIB16. A second previously
 identified target at 1955 MHz / PCI 377 was not reacquired. These observations

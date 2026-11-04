@@ -1,0 +1,1456 @@
+{
+  "test": "Bounded AT&T PLMN search using original ESP32 and onboard antenna",
+  "board": "ESP32-D0WD-V3 revision 3.1; 240 MHz CPU; 40 MHz crystal; onboard antenna",
+  "target_plmn": "310-410",
+  "target_assignment_source": "https://www.ituob.org/registers/e212-mnc/at/1166/",
+  "base_repository_commit": "abd085fb90ae3fa7dec9c1d9268638b184ff9048",
+  "att_identity_received": false,
+  "utc_from_att_recovered": false,
+  "passes": [
+    {
+      "gain_index": 68,
+      "snapshots_per_frequency": 4,
+      "gain_note": "Uncalibrated radio gain-table index, not measured dB",
+      "planned_frequencies_100kHz": [
+        23550,
+        23525,
+        23575,
+        23500,
+        19625,
+        19600,
+        19650,
+        19575,
+        19675,
+        19550,
+        19700,
+        19525,
+        19725,
+        19500,
+        19750,
+        19475,
+        19775,
+        19450,
+        19800,
+        19425,
+        19825,
+        19400,
+        19850,
+        19375,
+        19875,
+        19350,
+        19900,
+        19325,
+        19925,
+        19300,
+        21550,
+        21525,
+        21575,
+        21500,
+        21600,
+        21475,
+        21625,
+        21450,
+        21650,
+        21425,
+        21675,
+        21400,
+        21700,
+        21375,
+        21725,
+        21350,
+        21750,
+        21325,
+        21775,
+        21300,
+        21800,
+        21275,
+        21825,
+        21250,
+        21850,
+        21225,
+        21875,
+        21200,
+        21900,
+        21175,
+        21925,
+        21150,
+        21950,
+        21125,
+        21975,
+        21100
+      ],
+      "visited_nominal_frequencies_kHz": [
+        2355000,
+        2352500,
+        2357500,
+        2350000,
+        1962500,
+        1960000,
+        1965000,
+        1957500,
+        1967500,
+        1955000,
+        1970000,
+        1952500,
+        1972500,
+        1950000,
+        1975000,
+        1947500,
+        1977500,
+        1945000,
+        1980000,
+        1942500,
+        1982500,
+        1940000,
+        1985000,
+        1937500,
+        1987500,
+        1935000,
+        1990000,
+        1932500,
+        1992500,
+        1930000,
+        2155000,
+        2152500,
+        2157500,
+        2150000,
+        2160000,
+        2147500,
+        2162500,
+        2145000,
+        2165000,
+        2142500,
+        2167500,
+        2140000,
+        2170000,
+        2137500,
+        2172500,
+        2135000,
+        2175000,
+        2132500,
+        2177500,
+        2130000,
+        2180000,
+        2127500,
+        2182500,
+        2125000,
+        2185000,
+        2122500,
+        2187500,
+        2120000,
+        2190000,
+        2117500,
+        2192500,
+        2115000,
+        2195000,
+        2112500,
+        2197500,
+        2110000
+      ],
+      "complete_coarse_grid_pass": true,
+      "firmware_sha256": "f1e88805f55d0dfa55658f3c874835571a54cce8f9edc4976a4beee138b920e3",
+      "firmware_bytes": 720048,
+      "result": {
+        "synced": 0,
+        "status": 6,
+        "visits": 66,
+        "captures": 268,
+        "MIBs": 3,
+        "carrier_kHz": 2110000,
+        "PCI": 65535,
+        "cell": 0,
+        "ticks": 0
+      },
+      "crc_valid_mib_observations": [
+        {
+          "boot_ms": 131295,
+          "carrier_kHz": 2140000,
+          "PCI": 242,
+          "SFN": 628,
+          "RB": 50,
+          "ports": 4,
+          "Ng": 1.0,
+          "extPhich": 0
+        },
+        {
+          "boot_ms": 131603,
+          "carrier_kHz": 2140000,
+          "PCI": 242,
+          "SFN": 657,
+          "RB": 50,
+          "ports": 4,
+          "Ng": 1.0,
+          "extPhich": 0
+        },
+        {
+          "boot_ms": 131948,
+          "carrier_kHz": 2140000,
+          "PCI": 242,
+          "SFN": 690,
+          "RB": 50,
+          "ports": 4,
+          "Ng": 1.0,
+          "extPhich": 0
+        }
+      ],
+      "fresh_sib1_messages": [
+        {
+          "received_at": "2026-11-04T04:42:57.664120+00:00",
+          "boot_ms": 132777,
+          "nominal_carrier_kHz": 2140000,
+          "pci": 242,
+          "onboard_result": 5,
+          "onboard_att_filter": false,
+          "payload_hex": "684c424c17f1ba12fd0382350c60206113091860d8305cfe4a30100e016c9e60",
+          "payload_sha256": "8dc1cef225f286b95a5afb7f1062ba11c57f92c4f86700b824cbc302ae75229d",
+          "decoded_sib1": {
+            "plmns": [
+              {
+                "mcc": "310",
+                "mnc": "260"
+              }
+            ],
+            "tracking_area_code": 32539,
+            "eutran_cell_identity": 169016579,
+            "frequency_band": 4,
+            "scheduling": [
+              {
+                "si-Periodicity": "rf8",
+                "sib-MappingInfo": [
+                  "sibType3"
+                ]
+              },
+              {
+                "si-Periodicity": "rf64",
+                "sib-MappingInfo": [
+                  "sibType5"
+                ]
+              },
+              {
+                "si-Periodicity": "rf64",
+                "sib-MappingInfo": [
+                  "sibType7"
+                ]
+              },
+              {
+                "si-Periodicity": "rf64",
+                "sib-MappingInfo": [
+                  "sibType24-v1530"
+                ]
+              }
+            ],
+            "si_window": "ms10",
+            "hyper_sfn": 243,
+            "sib16_advertised": false
+          },
+          "sib8_advertised": false,
+          "sib16_advertised": false
+        }
+      ],
+      "main_cpp": "#include <Arduino.h>\n#include <Esp32LteClock.h>\nstatic esp32_lte_time::Esp32LteClock receiver;\nstatic void progress(esp32_lte_time::ClockStatus status,const esp32_lte_time::ClockEvidence& e){\n static uint32_t visit=0;static auto last=esp32_lte_time::ClockStatus::Idle;\n if(visit!=e.scanVisits||last!=status){\n  Serial.printf(\"ATT_PROBE boot_ms=%u status=%u visit=%u carrier_kHz=%u PCI=%u captures=%u MIBs=%u\\n\",millis(),unsigned(status),e.scanVisits,e.carrier100kHz*100u,e.pci,e.captures,e.mibs);\n  visit=e.scanVisits;last=status;\n }\n}\nvoid setup(){\n Serial.begin(115200);Serial.println(\"ATT_PROBE_START target_PLMN=310-410 no host time or serial input\");\n esp32_lte_time::ClockConfig config;config.autoScan=true;config.capturesPerFrequency=4;\n config.cellAttempts=1;config.cellTimeoutMs=20000;config.gainIndex=68;\n bool synced=receiver.sync(600000,config,progress);\n const auto& e=receiver.evidence();\n Serial.printf(\"ATT_PROBE_RESULT synced=%u status=%u visits=%u captures=%u MIBs=%u carrier_kHz=%u PCI=%u cell=%u ticks=%llu\\n\",unsigned(synced),unsigned(receiver.status()),e.scanVisits,e.captures,e.mibs,e.carrier100kHz*100u,e.pci,e.cellId,(unsigned long long)e.rawTicks);\n Serial.println(\"ATT_PROBE_DONE\");\n}\nvoid loop(){delay(1000);}\n",
+      "rows": [
+        {
+          "received_at": "2026-11-04T04:40:44.901201+00:00",
+          "observer_elapsed_s": 0.345,
+          "line": "ATT_PROBE_START target_PLMN=310-410 no host time or serial input"
+        },
+        {
+          "received_at": "2026-11-04T04:40:44.994473+00:00",
+          "observer_elapsed_s": 0.439,
+          "line": "ATT_PROBE boot_ms=111 status=1 visit=1 carrier_kHz=2355000 PCI=65535 captures=0 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:40:48.112195+00:00",
+          "observer_elapsed_s": 3.556,
+          "line": "ATT_PROBE boot_ms=3229 status=1 visit=2 carrier_kHz=2352500 PCI=65535 captures=4 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:40:51.233036+00:00",
+          "observer_elapsed_s": 6.677,
+          "line": "ATT_PROBE boot_ms=6350 status=1 visit=3 carrier_kHz=2357500 PCI=65535 captures=8 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:40:54.353994+00:00",
+          "observer_elapsed_s": 9.798,
+          "line": "ATT_PROBE boot_ms=9471 status=1 visit=4 carrier_kHz=2350000 PCI=65535 captures=12 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:40:57.474073+00:00",
+          "observer_elapsed_s": 12.918,
+          "line": "ATT_PROBE boot_ms=12591 status=1 visit=5 carrier_kHz=1962500 PCI=65535 captures=16 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:41:00.597226+00:00",
+          "observer_elapsed_s": 16.041,
+          "line": "ATT_PROBE boot_ms=15714 status=1 visit=6 carrier_kHz=1960000 PCI=65535 captures=20 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:41:03.717014+00:00",
+          "observer_elapsed_s": 19.161,
+          "line": "ATT_PROBE boot_ms=18834 status=1 visit=7 carrier_kHz=1965000 PCI=65535 captures=24 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:41:06.837660+00:00",
+          "observer_elapsed_s": 22.282,
+          "line": "ATT_PROBE boot_ms=21955 status=1 visit=8 carrier_kHz=1957500 PCI=65535 captures=28 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:41:09.960362+00:00",
+          "observer_elapsed_s": 25.404,
+          "line": "ATT_PROBE boot_ms=25078 status=1 visit=9 carrier_kHz=1967500 PCI=65535 captures=32 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:41:13.081736+00:00",
+          "observer_elapsed_s": 28.526,
+          "line": "ATT_PROBE boot_ms=28199 status=1 visit=10 carrier_kHz=1955000 PCI=65535 captures=36 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:41:16.203284+00:00",
+          "observer_elapsed_s": 31.647,
+          "line": "ATT_PROBE boot_ms=31321 status=1 visit=11 carrier_kHz=1970000 PCI=65535 captures=40 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:41:19.324239+00:00",
+          "observer_elapsed_s": 34.768,
+          "line": "ATT_PROBE boot_ms=34442 status=1 visit=12 carrier_kHz=1952500 PCI=65535 captures=44 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:41:22.442268+00:00",
+          "observer_elapsed_s": 37.886,
+          "line": "ATT_PROBE boot_ms=37560 status=1 visit=13 carrier_kHz=1972500 PCI=65535 captures=48 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:41:25.561037+00:00",
+          "observer_elapsed_s": 41.005,
+          "line": "ATT_PROBE boot_ms=40679 status=1 visit=14 carrier_kHz=1950000 PCI=65535 captures=52 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:41:28.681788+00:00",
+          "observer_elapsed_s": 44.126,
+          "line": "ATT_PROBE boot_ms=43800 status=1 visit=15 carrier_kHz=1975000 PCI=65535 captures=56 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:41:31.807009+00:00",
+          "observer_elapsed_s": 47.251,
+          "line": "ATT_PROBE boot_ms=46925 status=1 visit=16 carrier_kHz=1947500 PCI=65535 captures=60 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:41:34.929610+00:00",
+          "observer_elapsed_s": 50.374,
+          "line": "ATT_PROBE boot_ms=50048 status=1 visit=17 carrier_kHz=1977500 PCI=65535 captures=64 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:41:38.046445+00:00",
+          "observer_elapsed_s": 53.491,
+          "line": "ATT_PROBE boot_ms=53165 status=1 visit=18 carrier_kHz=1945000 PCI=65535 captures=68 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:41:41.166357+00:00",
+          "observer_elapsed_s": 56.61,
+          "line": "ATT_PROBE boot_ms=56285 status=1 visit=19 carrier_kHz=1980000 PCI=65535 captures=72 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:41:44.289388+00:00",
+          "observer_elapsed_s": 59.734,
+          "line": "ATT_PROBE boot_ms=59408 status=1 visit=20 carrier_kHz=1942500 PCI=65535 captures=76 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:41:47.413017+00:00",
+          "observer_elapsed_s": 62.857,
+          "line": "ATT_PROBE boot_ms=62532 status=1 visit=21 carrier_kHz=1982500 PCI=65535 captures=80 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:41:50.534901+00:00",
+          "observer_elapsed_s": 65.979,
+          "line": "ATT_PROBE boot_ms=65654 status=1 visit=22 carrier_kHz=1940000 PCI=65535 captures=84 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:41:53.652967+00:00",
+          "observer_elapsed_s": 69.097,
+          "line": "ATT_PROBE boot_ms=68772 status=1 visit=23 carrier_kHz=1985000 PCI=65535 captures=88 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:41:56.774691+00:00",
+          "observer_elapsed_s": 72.219,
+          "line": "ATT_PROBE boot_ms=71894 status=1 visit=24 carrier_kHz=1937500 PCI=65535 captures=92 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:41:59.895604+00:00",
+          "observer_elapsed_s": 75.34,
+          "line": "ATT_PROBE boot_ms=75015 status=1 visit=25 carrier_kHz=1987500 PCI=65535 captures=96 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:42:03.010388+00:00",
+          "observer_elapsed_s": 78.454,
+          "line": "ATT_PROBE boot_ms=78130 status=1 visit=26 carrier_kHz=1935000 PCI=65535 captures=100 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:42:06.135333+00:00",
+          "observer_elapsed_s": 81.579,
+          "line": "ATT_PROBE boot_ms=81255 status=1 visit=27 carrier_kHz=1990000 PCI=65535 captures=104 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:42:09.256134+00:00",
+          "observer_elapsed_s": 84.7,
+          "line": "ATT_PROBE boot_ms=84376 status=1 visit=28 carrier_kHz=1932500 PCI=65535 captures=108 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:42:12.375135+00:00",
+          "observer_elapsed_s": 87.819,
+          "line": "ATT_PROBE boot_ms=87495 status=1 visit=29 carrier_kHz=1992500 PCI=65535 captures=112 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:42:15.497026+00:00",
+          "observer_elapsed_s": 90.941,
+          "line": "ATT_PROBE boot_ms=90617 status=1 visit=30 carrier_kHz=1930000 PCI=65535 captures=116 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:42:18.611856+00:00",
+          "observer_elapsed_s": 94.056,
+          "line": "ATT_PROBE boot_ms=93732 status=1 visit=31 carrier_kHz=2155000 PCI=65535 captures=120 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:42:21.734817+00:00",
+          "observer_elapsed_s": 97.179,
+          "line": "ATT_PROBE boot_ms=96855 status=1 visit=32 carrier_kHz=2152500 PCI=65535 captures=124 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:42:24.855535+00:00",
+          "observer_elapsed_s": 100.3,
+          "line": "ATT_PROBE boot_ms=99976 status=1 visit=33 carrier_kHz=2157500 PCI=65535 captures=128 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:42:27.974556+00:00",
+          "observer_elapsed_s": 103.419,
+          "line": "ATT_PROBE boot_ms=103095 status=1 visit=34 carrier_kHz=2150000 PCI=65535 captures=132 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:42:31.091342+00:00",
+          "observer_elapsed_s": 106.535,
+          "line": "ATT_PROBE boot_ms=106212 status=1 visit=35 carrier_kHz=2160000 PCI=65535 captures=136 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:42:34.214162+00:00",
+          "observer_elapsed_s": 109.658,
+          "line": "ATT_PROBE boot_ms=109335 status=1 visit=36 carrier_kHz=2147500 PCI=65535 captures=140 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:42:37.335533+00:00",
+          "observer_elapsed_s": 112.78,
+          "line": "ATT_PROBE boot_ms=112456 status=1 visit=37 carrier_kHz=2162500 PCI=65535 captures=144 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:42:40.458039+00:00",
+          "observer_elapsed_s": 115.902,
+          "line": "ATT_PROBE boot_ms=115579 status=1 visit=38 carrier_kHz=2145000 PCI=65535 captures=148 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:42:43.577922+00:00",
+          "observer_elapsed_s": 119.022,
+          "line": "ATT_PROBE boot_ms=118699 status=1 visit=39 carrier_kHz=2165000 PCI=65535 captures=152 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:42:46.702648+00:00",
+          "observer_elapsed_s": 122.147,
+          "line": "ATT_PROBE boot_ms=121824 status=1 visit=40 carrier_kHz=2142500 PCI=65535 captures=156 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:42:49.827732+00:00",
+          "observer_elapsed_s": 125.272,
+          "line": "ATT_PROBE boot_ms=124949 status=1 visit=41 carrier_kHz=2167500 PCI=65535 captures=160 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:42:52.945560+00:00",
+          "observer_elapsed_s": 128.39,
+          "line": "ATT_PROBE boot_ms=128067 status=1 visit=42 carrier_kHz=2140000 PCI=65535 captures=164 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:42:55.879353+00:00",
+          "observer_elapsed_s": 131.323,
+          "line": "ATT_PROBE boot_ms=131001 status=2 visit=42 carrier_kHz=2140000 PCI=242 captures=167 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:42:56.174839+00:00",
+          "observer_elapsed_s": 131.619,
+          "line": "ATT_PROBE_MIB boot_ms=131295 carrier_kHz=2140000 PCI=242 SFN=628 RB=50 ports=4 Ng=1.00 extPhich=0"
+        },
+        {
+          "received_at": "2026-11-04T04:42:56.484439+00:00",
+          "observer_elapsed_s": 131.929,
+          "line": "ATT_PROBE_MIB boot_ms=131603 carrier_kHz=2140000 PCI=242 SFN=657 RB=50 ports=4 Ng=1.00 extPhich=0"
+        },
+        {
+          "received_at": "2026-11-04T04:42:56.490029+00:00",
+          "observer_elapsed_s": 131.934,
+          "line": "ATT_PROBE boot_ms=131604 status=3 visit=42 carrier_kHz=2140000 PCI=242 captures=169 MIBs=2"
+        },
+        {
+          "received_at": "2026-11-04T04:42:56.827103+00:00",
+          "observer_elapsed_s": 132.271,
+          "line": "ATT_PROBE_MIB boot_ms=131948 carrier_kHz=2140000 PCI=242 SFN=690 RB=50 ports=4 Ng=1.00 extPhich=0"
+        },
+        {
+          "received_at": "2026-11-04T04:42:57.664120+00:00",
+          "observer_elapsed_s": 133.108,
+          "line": "ATT_PROBE_SIB1 boot_ms=132777 carrier_kHz=2140000 PCI=242 result=5 cell=169016579 band=4 plmns=310-260 att=0 payload=684c424c17f1ba12fd0382350c60206113091860d8305cfe4a30100e016c9e60"
+        },
+        {
+          "received_at": "2026-11-04T04:42:57.671599+00:00",
+          "observer_elapsed_s": 133.116,
+          "line": "ATT_PROBE boot_ms=132789 status=8 visit=42 carrier_kHz=2140000 PCI=242 captures=171 MIBs=3"
+        },
+        {
+          "received_at": "2026-11-04T04:42:57.693151+00:00",
+          "observer_elapsed_s": 133.137,
+          "line": "ATT_PROBE boot_ms=132815 status=1 visit=42 carrier_kHz=2140000 PCI=242 captures=171 MIBs=3"
+        },
+        {
+          "received_at": "2026-11-04T04:42:58.476170+00:00",
+          "observer_elapsed_s": 133.92,
+          "line": "ATT_PROBE boot_ms=133598 status=1 visit=43 carrier_kHz=2170000 PCI=65535 captures=172 MIBs=3"
+        },
+        {
+          "received_at": "2026-11-04T04:43:01.593031+00:00",
+          "observer_elapsed_s": 137.037,
+          "line": "ATT_PROBE boot_ms=136715 status=1 visit=44 carrier_kHz=2137500 PCI=65535 captures=176 MIBs=3"
+        },
+        {
+          "received_at": "2026-11-04T04:43:04.718002+00:00",
+          "observer_elapsed_s": 140.162,
+          "line": "ATT_PROBE boot_ms=139840 status=1 visit=45 carrier_kHz=2172500 PCI=65535 captures=180 MIBs=3"
+        },
+        {
+          "received_at": "2026-11-04T04:43:07.840837+00:00",
+          "observer_elapsed_s": 143.285,
+          "line": "ATT_PROBE boot_ms=142963 status=1 visit=46 carrier_kHz=2135000 PCI=65535 captures=184 MIBs=3"
+        },
+        {
+          "received_at": "2026-11-04T04:43:10.962647+00:00",
+          "observer_elapsed_s": 146.407,
+          "line": "ATT_PROBE boot_ms=146085 status=1 visit=47 carrier_kHz=2175000 PCI=65535 captures=188 MIBs=3"
+        },
+        {
+          "received_at": "2026-11-04T04:43:14.079721+00:00",
+          "observer_elapsed_s": 149.524,
+          "line": "ATT_PROBE boot_ms=149202 status=1 visit=48 carrier_kHz=2132500 PCI=65535 captures=192 MIBs=3"
+        },
+        {
+          "received_at": "2026-11-04T04:43:17.204424+00:00",
+          "observer_elapsed_s": 152.649,
+          "line": "ATT_PROBE boot_ms=152327 status=1 visit=49 carrier_kHz=2177500 PCI=65535 captures=196 MIBs=3"
+        },
+        {
+          "received_at": "2026-11-04T04:43:20.328474+00:00",
+          "observer_elapsed_s": 155.773,
+          "line": "ATT_PROBE boot_ms=155451 status=1 visit=50 carrier_kHz=2130000 PCI=65535 captures=200 MIBs=3"
+        },
+        {
+          "received_at": "2026-11-04T04:43:23.452281+00:00",
+          "observer_elapsed_s": 158.896,
+          "line": "ATT_PROBE boot_ms=158575 status=1 visit=51 carrier_kHz=2180000 PCI=65535 captures=204 MIBs=3"
+        },
+        {
+          "received_at": "2026-11-04T04:43:26.572062+00:00",
+          "observer_elapsed_s": 162.016,
+          "line": "ATT_PROBE boot_ms=161695 status=1 visit=52 carrier_kHz=2127500 PCI=65535 captures=208 MIBs=3"
+        },
+        {
+          "received_at": "2026-11-04T04:43:29.688894+00:00",
+          "observer_elapsed_s": 165.133,
+          "line": "ATT_PROBE boot_ms=164812 status=1 visit=53 carrier_kHz=2182500 PCI=65535 captures=212 MIBs=3"
+        },
+        {
+          "received_at": "2026-11-04T04:43:32.808757+00:00",
+          "observer_elapsed_s": 168.253,
+          "line": "ATT_PROBE boot_ms=167932 status=1 visit=54 carrier_kHz=2125000 PCI=65535 captures=216 MIBs=3"
+        },
+        {
+          "received_at": "2026-11-04T04:43:35.929628+00:00",
+          "observer_elapsed_s": 171.374,
+          "line": "ATT_PROBE boot_ms=171053 status=1 visit=55 carrier_kHz=2185000 PCI=65535 captures=220 MIBs=3"
+        },
+        {
+          "received_at": "2026-11-04T04:43:39.047623+00:00",
+          "observer_elapsed_s": 174.492,
+          "line": "ATT_PROBE boot_ms=174171 status=1 visit=56 carrier_kHz=2122500 PCI=65535 captures=224 MIBs=3"
+        },
+        {
+          "received_at": "2026-11-04T04:43:42.165591+00:00",
+          "observer_elapsed_s": 177.61,
+          "line": "ATT_PROBE boot_ms=177289 status=1 visit=57 carrier_kHz=2187500 PCI=65535 captures=228 MIBs=3"
+        },
+        {
+          "received_at": "2026-11-04T04:43:45.284549+00:00",
+          "observer_elapsed_s": 180.729,
+          "line": "ATT_PROBE boot_ms=180408 status=1 visit=58 carrier_kHz=2120000 PCI=65535 captures=232 MIBs=3"
+        },
+        {
+          "received_at": "2026-11-04T04:43:48.404299+00:00",
+          "observer_elapsed_s": 183.848,
+          "line": "ATT_PROBE boot_ms=183528 status=1 visit=59 carrier_kHz=2190000 PCI=65535 captures=236 MIBs=3"
+        },
+        {
+          "received_at": "2026-11-04T04:43:51.527098+00:00",
+          "observer_elapsed_s": 186.971,
+          "line": "ATT_PROBE boot_ms=186651 status=1 visit=60 carrier_kHz=2117500 PCI=65535 captures=240 MIBs=3"
+        },
+        {
+          "received_at": "2026-11-04T04:43:54.648152+00:00",
+          "observer_elapsed_s": 190.092,
+          "line": "ATT_PROBE boot_ms=189772 status=1 visit=61 carrier_kHz=2192500 PCI=65535 captures=244 MIBs=3"
+        },
+        {
+          "received_at": "2026-11-04T04:43:57.771728+00:00",
+          "observer_elapsed_s": 193.216,
+          "line": "ATT_PROBE boot_ms=192896 status=1 visit=62 carrier_kHz=2115000 PCI=65535 captures=248 MIBs=3"
+        },
+        {
+          "received_at": "2026-11-04T04:44:00.887827+00:00",
+          "observer_elapsed_s": 196.332,
+          "line": "ATT_PROBE boot_ms=196012 status=1 visit=63 carrier_kHz=2195000 PCI=65535 captures=252 MIBs=3"
+        },
+        {
+          "received_at": "2026-11-04T04:44:04.006598+00:00",
+          "observer_elapsed_s": 199.451,
+          "line": "ATT_PROBE boot_ms=199131 status=1 visit=64 carrier_kHz=2112500 PCI=65535 captures=256 MIBs=3"
+        },
+        {
+          "received_at": "2026-11-04T04:44:07.124480+00:00",
+          "observer_elapsed_s": 202.569,
+          "line": "ATT_PROBE boot_ms=202249 status=1 visit=65 carrier_kHz=2197500 PCI=65535 captures=260 MIBs=3"
+        },
+        {
+          "received_at": "2026-11-04T04:44:10.247277+00:00",
+          "observer_elapsed_s": 205.691,
+          "line": "ATT_PROBE boot_ms=205372 status=1 visit=66 carrier_kHz=2110000 PCI=65535 captures=264 MIBs=3"
+        },
+        {
+          "received_at": "2026-11-04T04:44:13.358596+00:00",
+          "observer_elapsed_s": 208.803,
+          "line": "ATT_PROBE_PASS_DONE visits=66 captures=268 MIBs=3"
+        },
+        {
+          "received_at": "2026-11-04T04:44:13.367530+00:00",
+          "observer_elapsed_s": 208.812,
+          "line": "ATT_PROBE boot_ms=208492 status=6 visit=66 carrier_kHz=2110000 PCI=65535 captures=268 MIBs=3"
+        },
+        {
+          "received_at": "2026-11-04T04:44:13.378472+00:00",
+          "observer_elapsed_s": 208.823,
+          "line": "ATT_PROBE_RESULT synced=0 status=6 visits=66 captures=268 MIBs=3 carrier_kHz=2110000 PCI=65535 cell=0 ticks=0"
+        },
+        {
+          "received_at": "2026-11-04T04:44:13.378590+00:00",
+          "observer_elapsed_s": 208.823,
+          "line": "ATT_PROBE_DONE"
+        }
+      ],
+      "raw_log_sha256": "30d55794c4acc8afcde2832cc85607fa9f801c29ce77a8de60067f4f8b3e2e1d"
+    },
+    {
+      "gain_index": 72,
+      "snapshots_per_frequency": 8,
+      "gain_note": "Uncalibrated radio gain-table index, not measured dB",
+      "planned_frequencies_100kHz": [
+        23550,
+        23525,
+        23575,
+        23500,
+        19625,
+        19600,
+        19650,
+        19575,
+        19675,
+        19550,
+        19700,
+        19525,
+        19725,
+        19500,
+        19750,
+        19475,
+        19775,
+        19450,
+        19800,
+        19425,
+        19825,
+        19400,
+        19850,
+        19375,
+        19875,
+        19350,
+        19900,
+        19325,
+        19925,
+        19300,
+        21550,
+        21525,
+        21575,
+        21500,
+        21600,
+        21475,
+        21625,
+        21450,
+        21650,
+        21425,
+        21675,
+        21400,
+        21700,
+        21375,
+        21725,
+        21350,
+        21750,
+        21325,
+        21775,
+        21300,
+        21800,
+        21275,
+        21825,
+        21250,
+        21850,
+        21225,
+        21875,
+        21200,
+        21900,
+        21175,
+        21925,
+        21150,
+        21950,
+        21125,
+        21975,
+        21100
+      ],
+      "visited_nominal_frequencies_kHz": [
+        2355000,
+        2352500,
+        2357500,
+        2350000,
+        1962500,
+        1960000,
+        1965000,
+        1957500,
+        1967500,
+        1955000,
+        1970000,
+        1952500,
+        1972500,
+        1950000,
+        1975000,
+        1947500,
+        1977500,
+        1945000,
+        1980000,
+        1942500,
+        1982500,
+        1940000,
+        1985000,
+        1937500,
+        1987500,
+        1935000,
+        1990000,
+        1932500,
+        1992500,
+        1930000,
+        2155000,
+        2152500,
+        2157500,
+        2150000,
+        2160000,
+        2147500,
+        2162500,
+        2145000,
+        2165000,
+        2142500,
+        2167500,
+        2140000,
+        2170000,
+        2137500,
+        2172500,
+        2135000,
+        2175000,
+        2132500,
+        2177500,
+        2130000,
+        2180000,
+        2127500,
+        2182500,
+        2125000,
+        2185000,
+        2122500,
+        2187500,
+        2120000,
+        2190000,
+        2117500,
+        2192500,
+        2115000,
+        2195000,
+        2112500,
+        2197500,
+        2110000
+      ],
+      "complete_coarse_grid_pass": true,
+      "firmware_sha256": "b2f15617b23f560985d5b1ae64377da9d5051390dfc374540b18b480ef27486b",
+      "firmware_bytes": 720080,
+      "result": {
+        "synced": 0,
+        "status": 6,
+        "visits": 66,
+        "captures": 533,
+        "MIBs": 4,
+        "carrier_kHz": 2110000,
+        "PCI": 65535,
+        "cell": 0,
+        "ticks": 0
+      },
+      "crc_valid_mib_observations": [
+        {
+          "boot_ms": 258676,
+          "carrier_kHz": 2140000,
+          "PCI": 242,
+          "SFN": 29,
+          "RB": 50,
+          "ports": 4,
+          "Ng": 1.0,
+          "extPhich": 0
+        },
+        {
+          "boot_ms": 259022,
+          "carrier_kHz": 2140000,
+          "PCI": 242,
+          "SFN": 155,
+          "RB": 50,
+          "ports": 4,
+          "Ng": 1.0,
+          "extPhich": 0
+        },
+        {
+          "boot_ms": 259358,
+          "carrier_kHz": 2140000,
+          "PCI": 242,
+          "SFN": 190,
+          "RB": 50,
+          "ports": 4,
+          "Ng": 1.0,
+          "extPhich": 0
+        },
+        {
+          "boot_ms": 270341,
+          "carrier_kHz": 2140000,
+          "PCI": 242,
+          "SFN": 268,
+          "RB": 50,
+          "ports": 4,
+          "Ng": 1.0,
+          "extPhich": 0
+        }
+      ],
+      "fresh_sib1_messages": [
+        {
+          "received_at": "2026-11-04T04:51:25.416821+00:00",
+          "boot_ms": 271186,
+          "nominal_carrier_kHz": 2140000,
+          "pci": 242,
+          "onboard_result": 5,
+          "onboard_att_filter": false,
+          "payload_hex": "684c424c17f1ba12fd0382350c60206113091860d8305cfe4a30100e016ca4a0",
+          "payload_sha256": "b1460e25e1b4bcd8b02f8a27f82bbb3e94ea9207c74922a2f39d044e601f50b4",
+          "decoded_sib1": {
+            "plmns": [
+              {
+                "mcc": "310",
+                "mnc": "260"
+              }
+            ],
+            "tracking_area_code": 32539,
+            "eutran_cell_identity": 169016579,
+            "frequency_band": 4,
+            "scheduling": [
+              {
+                "si-Periodicity": "rf8",
+                "sib-MappingInfo": [
+                  "sibType3"
+                ]
+              },
+              {
+                "si-Periodicity": "rf64",
+                "sib-MappingInfo": [
+                  "sibType5"
+                ]
+              },
+              {
+                "si-Periodicity": "rf64",
+                "sib-MappingInfo": [
+                  "sibType7"
+                ]
+              },
+              {
+                "si-Periodicity": "rf64",
+                "sib-MappingInfo": [
+                  "sibType24-v1530"
+                ]
+              }
+            ],
+            "si_window": "ms10",
+            "hyper_sfn": 293,
+            "sib16_advertised": false
+          },
+          "sib8_advertised": false,
+          "sib16_advertised": false
+        }
+      ],
+      "main_cpp": "#include <Arduino.h>\n#include <Esp32LteClock.h>\nstatic esp32_lte_time::Esp32LteClock receiver;\nstatic void progress(esp32_lte_time::ClockStatus status,const esp32_lte_time::ClockEvidence& e){\n static uint32_t visit=0;static auto last=esp32_lte_time::ClockStatus::Idle;\n if(visit!=e.scanVisits||last!=status){\n  Serial.printf(\"ATT_PROBE boot_ms=%u status=%u visit=%u carrier_kHz=%u PCI=%u captures=%u MIBs=%u\\n\",millis(),unsigned(status),e.scanVisits,e.carrier100kHz*100u,e.pci,e.captures,e.mibs);\n  visit=e.scanVisits;last=status;\n }\n}\nvoid setup(){\n Serial.begin(115200);Serial.println(\"ATT_PROBE_START pass=2 gain_index=72 snapshots=8 target_PLMN=310-410 no host time or serial input\");\n esp32_lte_time::ClockConfig config;config.autoScan=true;config.capturesPerFrequency=8;\n config.cellAttempts=1;config.cellTimeoutMs=20000;config.gainIndex=72;\n bool synced=receiver.sync(600000,config,progress);\n const auto& e=receiver.evidence();\n Serial.printf(\"ATT_PROBE_RESULT synced=%u status=%u visits=%u captures=%u MIBs=%u carrier_kHz=%u PCI=%u cell=%u ticks=%llu\\n\",unsigned(synced),unsigned(receiver.status()),e.scanVisits,e.captures,e.mibs,e.carrier100kHz*100u,e.pci,e.cellId,(unsigned long long)e.rawTicks);\n Serial.println(\"ATT_PROBE_DONE\");\n}\nvoid loop(){delay(1000);}\n",
+      "rows": [
+        {
+          "received_at": "2026-11-04T04:46:54.253518+00:00",
+          "observer_elapsed_s": 0.348,
+          "line": "ATT_PROBE_START pass=2 gain_index=72 snapshots=8 target_PLMN=310-410 no host time or serial input"
+        },
+        {
+          "received_at": "2026-11-04T04:46:54.343948+00:00",
+          "observer_elapsed_s": 0.439,
+          "line": "ATT_PROBE boot_ms=111 status=1 visit=1 carrier_kHz=2355000 PCI=65535 captures=0 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:47:00.589428+00:00",
+          "observer_elapsed_s": 6.684,
+          "line": "ATT_PROBE boot_ms=6357 status=1 visit=2 carrier_kHz=2352500 PCI=65535 captures=8 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:47:06.834482+00:00",
+          "observer_elapsed_s": 12.929,
+          "line": "ATT_PROBE boot_ms=12602 status=1 visit=3 carrier_kHz=2357500 PCI=65535 captures=16 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:47:13.065994+00:00",
+          "observer_elapsed_s": 19.161,
+          "line": "ATT_PROBE boot_ms=18834 status=1 visit=4 carrier_kHz=2350000 PCI=65535 captures=24 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:47:19.302019+00:00",
+          "observer_elapsed_s": 25.397,
+          "line": "ATT_PROBE boot_ms=25070 status=1 visit=5 carrier_kHz=1962500 PCI=65535 captures=32 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:47:25.614732+00:00",
+          "observer_elapsed_s": 31.709,
+          "line": "ATT_PROBE boot_ms=31383 status=1 visit=6 carrier_kHz=1960000 PCI=65535 captures=40 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:47:31.843295+00:00",
+          "observer_elapsed_s": 37.938,
+          "line": "ATT_PROBE boot_ms=37612 status=1 visit=7 carrier_kHz=1965000 PCI=65535 captures=48 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:47:38.078014+00:00",
+          "observer_elapsed_s": 44.173,
+          "line": "ATT_PROBE boot_ms=43847 status=1 visit=8 carrier_kHz=1957500 PCI=65535 captures=56 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:47:44.319768+00:00",
+          "observer_elapsed_s": 50.414,
+          "line": "ATT_PROBE boot_ms=50089 status=1 visit=9 carrier_kHz=1967500 PCI=65535 captures=64 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:47:50.554644+00:00",
+          "observer_elapsed_s": 56.649,
+          "line": "ATT_PROBE boot_ms=56324 status=1 visit=10 carrier_kHz=1955000 PCI=65535 captures=72 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:47:56.795402+00:00",
+          "observer_elapsed_s": 62.89,
+          "line": "ATT_PROBE boot_ms=62565 status=1 visit=11 carrier_kHz=1970000 PCI=65535 captures=80 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:48:03.032317+00:00",
+          "observer_elapsed_s": 69.127,
+          "line": "ATT_PROBE boot_ms=68802 status=1 visit=12 carrier_kHz=1952500 PCI=65535 captures=88 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:48:09.267874+00:00",
+          "observer_elapsed_s": 75.363,
+          "line": "ATT_PROBE boot_ms=75038 status=1 visit=13 carrier_kHz=1972500 PCI=65535 captures=96 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:48:15.512640+00:00",
+          "observer_elapsed_s": 81.607,
+          "line": "ATT_PROBE boot_ms=81283 status=1 visit=14 carrier_kHz=1950000 PCI=65535 captures=104 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:48:21.758674+00:00",
+          "observer_elapsed_s": 87.853,
+          "line": "ATT_PROBE boot_ms=87529 status=1 visit=15 carrier_kHz=1975000 PCI=65535 captures=112 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:48:27.991189+00:00",
+          "observer_elapsed_s": 94.086,
+          "line": "ATT_PROBE boot_ms=93762 status=1 visit=16 carrier_kHz=1947500 PCI=65535 captures=120 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:48:34.232221+00:00",
+          "observer_elapsed_s": 100.327,
+          "line": "ATT_PROBE boot_ms=100003 status=1 visit=17 carrier_kHz=1977500 PCI=65535 captures=128 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:48:40.465746+00:00",
+          "observer_elapsed_s": 106.56,
+          "line": "ATT_PROBE boot_ms=106237 status=1 visit=18 carrier_kHz=1945000 PCI=65535 captures=136 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:48:46.705390+00:00",
+          "observer_elapsed_s": 112.8,
+          "line": "ATT_PROBE boot_ms=112477 status=1 visit=19 carrier_kHz=1980000 PCI=65535 captures=144 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:48:52.944343+00:00",
+          "observer_elapsed_s": 119.039,
+          "line": "ATT_PROBE boot_ms=118716 status=1 visit=20 carrier_kHz=1942500 PCI=65535 captures=152 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:48:59.178118+00:00",
+          "observer_elapsed_s": 125.273,
+          "line": "ATT_PROBE boot_ms=124950 status=1 visit=21 carrier_kHz=1982500 PCI=65535 captures=160 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:49:05.415673+00:00",
+          "observer_elapsed_s": 131.51,
+          "line": "ATT_PROBE boot_ms=131188 status=1 visit=22 carrier_kHz=1940000 PCI=65535 captures=168 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:49:11.659583+00:00",
+          "observer_elapsed_s": 137.754,
+          "line": "ATT_PROBE boot_ms=137432 status=1 visit=23 carrier_kHz=1985000 PCI=65535 captures=176 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:49:17.900276+00:00",
+          "observer_elapsed_s": 143.995,
+          "line": "ATT_PROBE boot_ms=143673 status=1 visit=24 carrier_kHz=1937500 PCI=65535 captures=184 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:49:24.133884+00:00",
+          "observer_elapsed_s": 150.229,
+          "line": "ATT_PROBE boot_ms=149907 status=1 visit=25 carrier_kHz=1987500 PCI=65535 captures=192 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:49:30.369053+00:00",
+          "observer_elapsed_s": 156.464,
+          "line": "ATT_PROBE boot_ms=156142 status=1 visit=26 carrier_kHz=1935000 PCI=65535 captures=200 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:49:36.604344+00:00",
+          "observer_elapsed_s": 162.699,
+          "line": "ATT_PROBE boot_ms=162378 status=1 visit=27 carrier_kHz=1990000 PCI=65535 captures=208 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:49:42.840037+00:00",
+          "observer_elapsed_s": 168.935,
+          "line": "ATT_PROBE boot_ms=168614 status=1 visit=28 carrier_kHz=1932500 PCI=65535 captures=216 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:49:49.078039+00:00",
+          "observer_elapsed_s": 175.173,
+          "line": "ATT_PROBE boot_ms=174852 status=1 visit=29 carrier_kHz=1992500 PCI=65535 captures=224 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:49:55.320561+00:00",
+          "observer_elapsed_s": 181.415,
+          "line": "ATT_PROBE boot_ms=181095 status=1 visit=30 carrier_kHz=1930000 PCI=65535 captures=232 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:50:01.563594+00:00",
+          "observer_elapsed_s": 187.658,
+          "line": "ATT_PROBE boot_ms=187338 status=1 visit=31 carrier_kHz=2155000 PCI=65535 captures=240 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:50:07.799038+00:00",
+          "observer_elapsed_s": 193.894,
+          "line": "ATT_PROBE boot_ms=193574 status=1 visit=32 carrier_kHz=2152500 PCI=65535 captures=248 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:50:14.026804+00:00",
+          "observer_elapsed_s": 200.121,
+          "line": "ATT_PROBE boot_ms=199802 status=1 visit=33 carrier_kHz=2157500 PCI=65535 captures=256 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:50:20.271732+00:00",
+          "observer_elapsed_s": 206.366,
+          "line": "ATT_PROBE boot_ms=206047 status=1 visit=34 carrier_kHz=2150000 PCI=65535 captures=264 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:50:26.509300+00:00",
+          "observer_elapsed_s": 212.604,
+          "line": "ATT_PROBE boot_ms=212285 status=1 visit=35 carrier_kHz=2160000 PCI=65535 captures=272 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:50:32.752124+00:00",
+          "observer_elapsed_s": 218.847,
+          "line": "ATT_PROBE boot_ms=218528 status=1 visit=36 carrier_kHz=2147500 PCI=65535 captures=280 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:50:38.991917+00:00",
+          "observer_elapsed_s": 225.087,
+          "line": "ATT_PROBE boot_ms=224768 status=1 visit=37 carrier_kHz=2162500 PCI=65535 captures=288 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:50:45.230622+00:00",
+          "observer_elapsed_s": 231.325,
+          "line": "ATT_PROBE boot_ms=231007 status=1 visit=38 carrier_kHz=2145000 PCI=65535 captures=296 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:50:51.469282+00:00",
+          "observer_elapsed_s": 237.564,
+          "line": "ATT_PROBE boot_ms=237246 status=1 visit=39 carrier_kHz=2165000 PCI=65535 captures=304 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:50:57.698089+00:00",
+          "observer_elapsed_s": 243.793,
+          "line": "ATT_PROBE boot_ms=243475 status=1 visit=40 carrier_kHz=2142500 PCI=65535 captures=312 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:51:03.946797+00:00",
+          "observer_elapsed_s": 250.041,
+          "line": "ATT_PROBE boot_ms=249724 status=1 visit=41 carrier_kHz=2167500 PCI=65535 captures=320 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:51:10.185533+00:00",
+          "observer_elapsed_s": 256.28,
+          "line": "ATT_PROBE boot_ms=255963 status=1 visit=42 carrier_kHz=2140000 PCI=65535 captures=328 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:51:12.859216+00:00",
+          "observer_elapsed_s": 258.954,
+          "line": "ATT_PROBE boot_ms=258637 status=2 visit=42 carrier_kHz=2140000 PCI=242 captures=331 MIBs=0"
+        },
+        {
+          "received_at": "2026-11-04T04:51:12.899384+00:00",
+          "observer_elapsed_s": 258.994,
+          "line": "ATT_PROBE_MIB boot_ms=258676 carrier_kHz=2140000 PCI=242 SFN=29 RB=50 ports=4 Ng=1.00 extPhich=0"
+        },
+        {
+          "received_at": "2026-11-04T04:51:13.247558+00:00",
+          "observer_elapsed_s": 259.342,
+          "line": "ATT_PROBE_MIB boot_ms=259022 carrier_kHz=2140000 PCI=242 SFN=155 RB=50 ports=4 Ng=1.00 extPhich=0"
+        },
+        {
+          "received_at": "2026-11-04T04:51:13.253100+00:00",
+          "observer_elapsed_s": 259.348,
+          "line": "ATT_PROBE boot_ms=259023 status=3 visit=42 carrier_kHz=2140000 PCI=242 captures=332 MIBs=2"
+        },
+        {
+          "received_at": "2026-11-04T04:51:13.581212+00:00",
+          "observer_elapsed_s": 259.676,
+          "line": "ATT_PROBE_MIB boot_ms=259358 carrier_kHz=2140000 PCI=242 SFN=190 RB=50 ports=4 Ng=1.00 extPhich=0"
+        },
+        {
+          "received_at": "2026-11-04T04:51:24.564175+00:00",
+          "observer_elapsed_s": 270.659,
+          "line": "ATT_PROBE_MIB boot_ms=270341 carrier_kHz=2140000 PCI=242 SFN=268 RB=50 ports=4 Ng=1.00 extPhich=0"
+        },
+        {
+          "received_at": "2026-11-04T04:51:25.416821+00:00",
+          "observer_elapsed_s": 271.512,
+          "line": "ATT_PROBE_SIB1 boot_ms=271186 carrier_kHz=2140000 PCI=242 result=5 cell=169016579 band=4 plmns=310-260 att=0 payload=684c424c17f1ba12fd0382350c60206113091860d8305cfe4a30100e016ca4a0"
+        },
+        {
+          "received_at": "2026-11-04T04:51:25.424156+00:00",
+          "observer_elapsed_s": 271.519,
+          "line": "ATT_PROBE boot_ms=271198 status=8 visit=42 carrier_kHz=2140000 PCI=242 captures=336 MIBs=4"
+        },
+        {
+          "received_at": "2026-11-04T04:51:25.447080+00:00",
+          "observer_elapsed_s": 271.542,
+          "line": "ATT_PROBE boot_ms=271225 status=1 visit=42 carrier_kHz=2140000 PCI=242 captures=336 MIBs=4"
+        },
+        {
+          "received_at": "2026-11-04T04:51:29.966787+00:00",
+          "observer_elapsed_s": 276.061,
+          "line": "ATT_PROBE boot_ms=275745 status=1 visit=43 carrier_kHz=2170000 PCI=65535 captures=341 MIBs=4"
+        },
+        {
+          "received_at": "2026-11-04T04:51:36.199445+00:00",
+          "observer_elapsed_s": 282.294,
+          "line": "ATT_PROBE boot_ms=281978 status=1 visit=44 carrier_kHz=2137500 PCI=65535 captures=349 MIBs=4"
+        },
+        {
+          "received_at": "2026-11-04T04:51:42.439261+00:00",
+          "observer_elapsed_s": 288.534,
+          "line": "ATT_PROBE boot_ms=288218 status=1 visit=45 carrier_kHz=2172500 PCI=65535 captures=357 MIBs=4"
+        },
+        {
+          "received_at": "2026-11-04T04:51:48.672928+00:00",
+          "observer_elapsed_s": 294.768,
+          "line": "ATT_PROBE boot_ms=294452 status=1 visit=46 carrier_kHz=2135000 PCI=65535 captures=365 MIBs=4"
+        },
+        {
+          "received_at": "2026-11-04T04:51:54.909812+00:00",
+          "observer_elapsed_s": 301.005,
+          "line": "ATT_PROBE boot_ms=300689 status=1 visit=47 carrier_kHz=2175000 PCI=65535 captures=373 MIBs=4"
+        },
+        {
+          "received_at": "2026-11-04T04:52:01.150452+00:00",
+          "observer_elapsed_s": 307.245,
+          "line": "ATT_PROBE boot_ms=306930 status=1 visit=48 carrier_kHz=2132500 PCI=65535 captures=381 MIBs=4"
+        },
+        {
+          "received_at": "2026-11-04T04:52:07.392231+00:00",
+          "observer_elapsed_s": 313.487,
+          "line": "ATT_PROBE boot_ms=313172 status=1 visit=49 carrier_kHz=2177500 PCI=65535 captures=389 MIBs=4"
+        },
+        {
+          "received_at": "2026-11-04T04:52:13.630954+00:00",
+          "observer_elapsed_s": 319.726,
+          "line": "ATT_PROBE boot_ms=319411 status=1 visit=50 carrier_kHz=2130000 PCI=65535 captures=397 MIBs=4"
+        },
+        {
+          "received_at": "2026-11-04T04:52:19.867709+00:00",
+          "observer_elapsed_s": 325.962,
+          "line": "ATT_PROBE boot_ms=325648 status=1 visit=51 carrier_kHz=2180000 PCI=65535 captures=405 MIBs=4"
+        },
+        {
+          "received_at": "2026-11-04T04:52:26.103456+00:00",
+          "observer_elapsed_s": 332.198,
+          "line": "ATT_PROBE boot_ms=331884 status=1 visit=52 carrier_kHz=2127500 PCI=65535 captures=413 MIBs=4"
+        },
+        {
+          "received_at": "2026-11-04T04:52:32.344060+00:00",
+          "observer_elapsed_s": 338.439,
+          "line": "ATT_PROBE boot_ms=338125 status=1 visit=53 carrier_kHz=2182500 PCI=65535 captures=421 MIBs=4"
+        },
+        {
+          "received_at": "2026-11-04T04:52:38.587884+00:00",
+          "observer_elapsed_s": 344.683,
+          "line": "ATT_PROBE boot_ms=344369 status=1 visit=54 carrier_kHz=2125000 PCI=65535 captures=429 MIBs=4"
+        },
+        {
+          "received_at": "2026-11-04T04:52:44.823645+00:00",
+          "observer_elapsed_s": 350.918,
+          "line": "ATT_PROBE boot_ms=350605 status=1 visit=55 carrier_kHz=2185000 PCI=65535 captures=437 MIBs=4"
+        },
+        {
+          "received_at": "2026-11-04T04:52:51.061390+00:00",
+          "observer_elapsed_s": 357.156,
+          "line": "ATT_PROBE boot_ms=356843 status=1 visit=56 carrier_kHz=2122500 PCI=65535 captures=445 MIBs=4"
+        },
+        {
+          "received_at": "2026-11-04T04:52:57.292033+00:00",
+          "observer_elapsed_s": 363.387,
+          "line": "ATT_PROBE boot_ms=363074 status=1 visit=57 carrier_kHz=2187500 PCI=65535 captures=453 MIBs=4"
+        },
+        {
+          "received_at": "2026-11-04T04:53:03.533885+00:00",
+          "observer_elapsed_s": 369.629,
+          "line": "ATT_PROBE boot_ms=369316 status=1 visit=58 carrier_kHz=2120000 PCI=65535 captures=461 MIBs=4"
+        },
+        {
+          "received_at": "2026-11-04T04:53:09.772800+00:00",
+          "observer_elapsed_s": 375.867,
+          "line": "ATT_PROBE boot_ms=375555 status=1 visit=59 carrier_kHz=2190000 PCI=65535 captures=469 MIBs=4"
+        },
+        {
+          "received_at": "2026-11-04T04:53:16.007283+00:00",
+          "observer_elapsed_s": 382.102,
+          "line": "ATT_PROBE boot_ms=381790 status=1 visit=60 carrier_kHz=2117500 PCI=65535 captures=477 MIBs=4"
+        },
+        {
+          "received_at": "2026-11-04T04:53:22.241213+00:00",
+          "observer_elapsed_s": 388.336,
+          "line": "ATT_PROBE boot_ms=388024 status=1 visit=61 carrier_kHz=2192500 PCI=65535 captures=485 MIBs=4"
+        },
+        {
+          "received_at": "2026-11-04T04:53:28.485056+00:00",
+          "observer_elapsed_s": 394.58,
+          "line": "ATT_PROBE boot_ms=394268 status=1 visit=62 carrier_kHz=2115000 PCI=65535 captures=493 MIBs=4"
+        },
+        {
+          "received_at": "2026-11-04T04:53:34.710586+00:00",
+          "observer_elapsed_s": 400.805,
+          "line": "ATT_PROBE boot_ms=400494 status=1 visit=63 carrier_kHz=2195000 PCI=65535 captures=501 MIBs=4"
+        },
+        {
+          "received_at": "2026-11-04T04:53:40.954263+00:00",
+          "observer_elapsed_s": 407.049,
+          "line": "ATT_PROBE boot_ms=406738 status=1 visit=64 carrier_kHz=2112500 PCI=65535 captures=509 MIBs=4"
+        },
+        {
+          "received_at": "2026-11-04T04:53:47.195089+00:00",
+          "observer_elapsed_s": 413.29,
+          "line": "ATT_PROBE boot_ms=412979 status=1 visit=65 carrier_kHz=2197500 PCI=65535 captures=517 MIBs=4"
+        },
+        {
+          "received_at": "2026-11-04T04:53:53.432806+00:00",
+          "observer_elapsed_s": 419.527,
+          "line": "ATT_PROBE boot_ms=419217 status=1 visit=66 carrier_kHz=2110000 PCI=65535 captures=525 MIBs=4"
+        },
+        {
+          "received_at": "2026-11-04T04:53:59.663879+00:00",
+          "observer_elapsed_s": 425.759,
+          "line": "ATT_PROBE_PASS_DONE visits=66 captures=533 MIBs=4"
+        },
+        {
+          "received_at": "2026-11-04T04:53:59.672742+00:00",
+          "observer_elapsed_s": 425.767,
+          "line": "ATT_PROBE boot_ms=425457 status=6 visit=66 carrier_kHz=2110000 PCI=65535 captures=533 MIBs=4"
+        },
+        {
+          "received_at": "2026-11-04T04:53:59.683713+00:00",
+          "observer_elapsed_s": 425.778,
+          "line": "ATT_PROBE_RESULT synced=0 status=6 visits=66 captures=533 MIBs=4 carrier_kHz=2110000 PCI=65535 cell=0 ticks=0"
+        },
+        {
+          "received_at": "2026-11-04T04:53:59.683769+00:00",
+          "observer_elapsed_s": 425.778,
+          "line": "ATT_PROBE_DONE"
+        }
+      ],
+      "raw_log_sha256": "61fe8f394631263b80c2d681371192405c85c4e46b5df27d85ba9f362c43cf7e"
+    }
+  ],
+  "identity_filter_native_validation": [
+    {
+      "case": "T-Mobile",
+      "expected_att": false,
+      "native_result": {
+        "status": 5,
+        "plmns": [
+          {
+            "mcc": 310,
+            "mnc": 260,
+            "digits": 3
+          }
+        ],
+        "att": false
+      }
+    },
+    {
+      "case": "AT&T",
+      "expected_att": true,
+      "native_result": {
+        "status": 5,
+        "plmns": [
+          {
+            "mcc": 310,
+            "mnc": 410,
+            "digits": 3
+          }
+        ],
+        "att": true
+      }
+    },
+    {
+      "case": "Verizon",
+      "expected_att": false,
+      "native_result": {
+        "status": 5,
+        "plmns": [
+          {
+            "mcc": 311,
+            "mnc": 480,
+            "digits": 3
+          }
+        ],
+        "att": false
+      }
+    },
+    {
+      "case": "two-digit MNC",
+      "expected_att": false,
+      "native_result": {
+        "status": 5,
+        "plmns": [
+          {
+            "mcc": 310,
+            "mnc": 41,
+            "digits": 2
+          }
+        ],
+        "att": false
+      }
+    },
+    {
+      "case": "leading zero",
+      "expected_att": false,
+      "native_result": {
+        "status": 5,
+        "plmns": [
+          {
+            "mcc": 310,
+            "mnc": 41,
+            "digits": 3
+          }
+        ],
+        "att": false
+      }
+    },
+    {
+      "case": "inherited MCC",
+      "expected_att": true,
+      "native_result": {
+        "status": 5,
+        "plmns": [
+          {
+            "mcc": 310,
+            "mnc": 260,
+            "digits": 3
+          },
+          {
+            "mcc": 310,
+            "mnc": 410,
+            "digits": 3
+          }
+        ],
+        "att": true
+      }
+    },
+    {
+      "case": "different MCC",
+      "expected_att": false,
+      "native_result": {
+        "status": 5,
+        "plmns": [
+          {
+            "mcc": 311,
+            "mnc": 410,
+            "digits": 3
+          }
+        ],
+        "att": false
+      }
+    }
+  ],
+  "bench_library_patches": {
+    "Esp32LteClock.cpp": "--- src/Esp32LteClock.cpp\n+++ bench/src/Esp32LteClock.cpp\n@@ -55,6 +55,7 @@\n     evidence_.carrierCorrectionHz=float(carrier_-activeCarrierHz_);\n     if(attempt%4==0)report(ClockStatus::Acquiring);\n     if(mib.valid){\n+      Serial.printf(\"ATT_PROBE_MIB boot_ms=%u carrier_kHz=%u PCI=%u SFN=%u RB=%u ports=%u Ng=%.2f extPhich=%u\\n\",millis(),evidence_.carrier100kHz*100u,pci_,mib.sfn,mib.resourceBlocks,mib.ports,mib.phichResource,unsigned(mib.extendedPhich));\n       ++evidence_.mibs;\n       if(!supported(mib)){report(ClockStatus::UnsupportedCell);return false;}\n       double observed=double(stamp)+candidate.frameOffsetUs;\n@@ -94,6 +95,7 @@\n     if(std::fabs(observed-(phase_+n*period_))>80)continue;\n     Mib mib=rf_.readMib(sync);\n     if(mib.valid){\n+      Serial.printf(\"ATT_PROBE_MIB boot_ms=%u carrier_kHz=%u PCI=%u SFN=%u RB=%u ports=%u Ng=%.2f extPhich=%u\\n\",millis(),evidence_.carrier100kHz*100u,pci_,mib.sfn,mib.resourceBlocks,mib.ports,mib.phichResource,unsigned(mib.extendedPhich));\n       ++evidence_.mibs;\n       if(!supported(mib)||mib.sfn!=expected)return false;\n     }\n@@ -107,7 +109,7 @@\n   if(!acquire(words,stamp,found))return false;\n   uint8_t payload[MaxTransportBits/8];\n   SiSchedule schedule;bool hasSchedule=false;\n-  for(unsigned attempt=0;attempt<10&&!expired();++attempt){\n+  for(unsigned attempt=0;attempt<3&&!expired();++attempt){\n     report(ClockStatus::ReadingSchedule);\n     // A recent CRC-fitted anchor can still target a CRC-checked SI window\n     // when a tracking snapshot fades. Abandon it after a bounded interval.\n@@ -119,6 +121,19 @@\n         carrier_-activeTuningMHz_*1000000.0,pci_,5,payload,bytes);\n     if(r!=Result::Ok)continue;\n     r=parseSib1Schedule(payload,bytes,schedule);\n+    if(r==Result::Ok||r==Result::NoTime){\n+      bool att=false;\n+      Serial.printf(\"ATT_PROBE_SIB1 boot_ms=%u carrier_kHz=%u PCI=%u result=%u cell=%u band=%u plmns=\",millis(),evidence_.carrier100kHz*100u,pci_,unsigned(r),schedule.cellId,schedule.band);\n+      for(unsigned k=0;k<schedule.plmnCount;++k){\n+        const auto& p=schedule.plmns[k];\n+        Serial.printf(\"%s%03u-%0*u\",k?\",\":\"\",p.mcc,p.digits,p.mnc);\n+        if(p.mcc==310&&p.mnc==410&&p.digits==3)att=true;\n+      }\n+      Serial.printf(\" att=%u payload=\",unsigned(att));\n+      for(size_t k=0;k<bytes;++k)Serial.printf(\"%02x\",payload[k]);Serial.println();\n+      if(!att){report(ClockStatus::UnsupportedCell);return false;}\n+    }\n+\n     if(r==Result::NoTime){report(ClockStatus::UnsupportedCell);break;}\n     if(r==Result::Ok){evidence_.cellId=schedule.cellId;hasSchedule=true;timeScheduleFound_=true;break;}\n   }\n@@ -188,6 +203,11 @@\n   while(esp_timer_get_time()<deadline_){\n     cellDeadline_=0;\n     if(config.autoScan&&dwell>=config.capturesPerFrequency){\n+      if(evidence_.scanVisits>=CellScanPlan::count()){\n+        Serial.printf(\"ATT_PROBE_PASS_DONE visits=%u captures=%u MIBs=%u\\n\",evidence_.scanVisits,evidence_.captures,evidence_.mibs);\n+        radio_.end();rf_.release();report(ClockStatus::TimedOut);return false;\n+      }\n+\n       scanCursor_=(scanCursor_+1)%CellScanPlan::count();selectFrequency();\n       dwell=0;excludedCount=0;attemptedCount=0;\n       std::memset(attempts,0,sizeof(attempts));\n",
+    "LteRfDecoder.cpp": "--- src/LteRfDecoder.cpp\n+++ bench/src/LteRfDecoder.cpp\n@@ -227,13 +227,16 @@\n   if(b.get(1)!=0||b.get(1)!=1)return Result::Unsupported;\n   bool pmax=b.get(1),tdd=b.get(1);b.get(1); // nonCriticalExtension follows root fields.\n   bool csg=b.get(1);\n-  unsigned plmns=b.constrained(1,6);\n+  unsigned plmns=b.constrained(1,6),mccValue=0;\n   for(unsigned i=0;i<plmns&&b.good;++i){\n     bool mcc=b.get(1);\n-    if(mcc)for(unsigned j=0;j<3;++j)b.constrained(0,9);\n-    unsigned digits=b.constrained(2,3);\n-    for(unsigned j=0;j<digits;++j)b.constrained(0,9);\n+    if(mcc){mccValue=0;for(unsigned j=0;j<3;++j)mccValue=mccValue*10+b.constrained(0,9);}\n+    else if(i==0)return Result::MalformedRrc;\n+    unsigned digits=b.constrained(2,3),mncValue=0;\n+    for(unsigned j=0;j<digits;++j)mncValue=mncValue*10+b.constrained(0,9);\n     b.get(1);\n+    schedule.plmns[i].mcc=uint16_t(mccValue);schedule.plmns[i].mnc=uint16_t(mncValue);\n+    schedule.plmns[i].digits=uint8_t(digits);schedule.plmnCount=uint8_t(i+1);\n   }\n   b.get(16);schedule.cellId=b.get(28);\n   b.get(1);b.get(1);b.get(1);if(csg)b.get(27);\n",
+    "LteRfDecoder.h": "--- src/LteRfDecoder.h\n+++ bench/src/LteRfDecoder.h\n@@ -27,7 +27,10 @@\n   float phichResource = 0;\n   bool extendedPhich = false;\n };\n+struct ProbePlmn { uint16_t mcc=0,mnc=0; uint8_t digits=0; };\n struct SiSchedule {\n+  ProbePlmn plmns[6];\n+  uint8_t plmnCount=0;\n   uint32_t cellId = 0;\n   uint16_t periodFrames = 0, startMs = 0;\n   uint8_t windowMs = 0, band = 0;\n",
+    "LteCellScan.h": "--- src/LteCellScan.h\n+++ bench/src/LteCellScan.h\n@@ -1,51 +1,14 @@\n-// SPDX-License-Identifier: GPL-3.0-only\n+// Isolated bench scan plan; production library is unchanged.\n #pragma once\n #include <stdint.h>\n-\n namespace esp32_lte_time {\n-// Union of reachable FDD downlink ranges for bands 1/2/3/4/7/9/10/23/25/30\n-// and their overlapping extensions. Units: 100 kHz. This is a search plan,\n-// not a claim of RF sensitivity or time-message support across these bands.\n-struct ScanRange { uint16_t first, last; };\n class CellScanPlan {\n  public:\n-  static constexpr unsigned rangeCount() { return 5; }\n-  static ScanRange range(unsigned i) {\n-    const ScanRange ranges[]={{21100,21999},{19300,19949},{18420,18799},\n-                              {23500,23599},{26200,26899}};\n-    return i<rangeCount()?ranges[i]:ScanRange{0,0};\n+  static constexpr unsigned count(){return 66;}\n+  static uint16_t frequency(unsigned index){\n+    static const uint16_t points[]={23550,23525,23575,23500,19625,19600,19650,19575,19675,19550,19700,19525,19725,19500,19750,19475,19775,19450,19800,19425,19825,19400,19850,19375,19875,19350,19900,19325,19925,19300,21550,21525,21575,21500,21600,21475,21625,21450,21650,21425,21675,21400,21700,21375,21725,21350,21750,21325,21775,21300,21800,21275,21825,21250,21850,21225,21875,21200,21900,21175,21925,21150,21950,21125,21975,21100};\n+    return points[index%count()];\n   }\n-  static unsigned count() {\n-    unsigned n=0;\n-    for(unsigned i=0;i<rangeCount();++i){auto r=range(i);n+=r.last-r.first+1;}\n-    return n;\n-  }\n-  // First pass: 5 MHz centers, from the middle of each range outward. Then\n-  // every remaining 100 kHz raster point. No frequency or PCI learned at the\n-  // bench is stored. All raster points occur exactly once per complete pass.\n-  static uint16_t frequency(unsigned index) {\n-    index%=count();\n-    for(unsigned i=0;i<rangeCount();++i){\n-      auto r=range(i);const int first=(r.first+49)/50,last=r.last/50;\n-      const int center=(first+last+1)/2;\n-      for(int step=0;step<=2*(last-first+1);++step){\n-        const int p=center+(step%2?-(step+1)/2:step/2);\n-        if(p<first||p>last)continue;\n-        if(index--==0)return uint16_t(p*50);\n-      }\n-    }\n-    for(unsigned i=0;i<rangeCount();++i){\n-      auto r=range(i);\n-      for(unsigned f=r.first;f<=r.last;++f){\n-        if(f%50==0)continue;\n-        if(index--==0)return uint16_t(f);\n-      }\n-    }\n-    return 0;\n-  }\n-  static uint16_t tuningMHz(uint16_t carrier100kHz) {\n-    const unsigned lo=carrier100kHz/10-1;\n-    return uint16_t(lo<1842?1842:lo);\n-  }\n+  static uint16_t tuningMHz(uint16_t f){return uint16_t(f/10-1);}\n };\n-} // namespace esp32_lte_time\n+}\n"
+  },
+  "production_source_modified": false,
+  "serial_data_bytes_sent": 0,
+  "software_reset_requested": true,
+  "host_role": "Firmware upload/reset and read-only diagnostics. Independent ASN.1 identity/schedule verification on the PC did not feed any result to the board. No host time or decoded time was supplied.",
+  "host_receipt_times_are_labels_only": true,
+  "crc_provenance": "SIB1 bytes were emitted only after onboard SI-RNTI CRC16, transport CRC24, and core SIB1 parsing succeeded. Independent pycrate checking verifies the emitted payload identity and schedule, not raw RF CRCs.",
+  "coverage_limitations": [
+    "66 nominal centers at 2.5 MHz spacing within reachable WCS/PCS/AWS ranges; not a complete 100 kHz LTE raster survey",
+    "Lower LTE bands outside the current direct-tuning backend were not tested",
+    "Only FDD normal-CP, 50-RB, four-port, Ng=1 cells can reach the current SIB/time path; other decoded MIB profiles remain operator-unidentified unless SIB1 is recovered",
+    "Short sampling dwell, RF fading and cell profiles can prevent identification; lack of reception does not establish lack of an AT&T signal or time broadcast"
+  ],
+  "restoration": {
+    "production_firmware_restored": true,
+    "firmware_sha256": "ee10a97dff4dcaae620932cbaf49346ab9d9062e085f39b20bade5a246f3d5d8",
+    "method": "App-only esptool write_flash at 0x10000 with write hash verified",
+    "production_source_unchanged": true,
+    "software_boot_verified": true,
+    "serial_data_bytes_sent": 0,
+    "rows": [
+      {
+        "observer_elapsed_s": 0.351,
+        "line": "Receiving UTC from LTE using the onboard antenna..."
+      },
+      {
+        "observer_elapsed_s": 0.443,
+        "line": "LTE boot_ms=109 status=1 carrier_kHz=2155000 PCI=65535 captures=0 MIBs=0"
+      }
+    ],
+    "startup_bytes_discarded_by_observer": 0,
+    "scope": "Automatic v0.2 firmware was restored and booted. A new UTC acquisition after restoration was not awaited; the board continues its normal scan."
+  }
+}

@@ -17,6 +17,50 @@
 Do not interpret the `esp32dev` target as identification of a particular board
 manufacturer, or this result as support for ESP32-C3, S3, C5, or every ESP32 module.
 
+## AT&T coarse identity search: no AT&T cell verified
+
+**No AT&T identity or AT&T UTC was recovered in this bounded search.** An
+isolated diagnostic build scanned 66 nominal centers in each of two passes,
+with blind PCI discovery and an onboard filter for PLMN **310-410**
+([ITU assignment: AT&T Mobility](https://www.ituob.org/registers/e212-mnc/at/1166/)).
+The original ESP32-D0WD-V3 revision 3.1 and its onboard antenna were used.
+
+| Pass | Gain-table index | Snapshots per point | Points visited | Capture attempts | Valid MIB observations | Accepted SIB1 identity |
+|---|---:|---:|---:|---:|---:|---|
+| 1 | 68 | 4 | 66 | 268 | 3 | 310-260, T-Mobile |
+| 2 | 72 | 8 | 66 | 533 | 4 | 310-260, T-Mobile |
+
+Both passes completed their coarse grids: **132 frequency visits and 801
+capture attempts** in total. Gain indices are not calibrated dB values. The
+T-Mobile positive-control messages were received at nominal 2140 MHz, PCI 242,
+cell 169016579. Their complete SIB1 payloads independently decoded to PLMN
+310-260 and agreed with the onboard filter's rejection of them as AT&T. Neither
+pass accepted a new time counter or set UTC from an AT&T broadcast.
+
+The plan sampled every 2.5 MHz within the receiver's reachable WCS, PCS and AWS
+ranges: 2350–2359.9, 1930–1994.9 and 2110–2199.9 MHz. It was **not an exhaustive
+100 kHz raster survey**. Lower cellular bands outside this direct-tuning backend
+were not tested. Short dwell times, fading, off-grid carrier centers and the
+decoder's normal-CP FDD / 50-RB / four-port / Ng=1 profile limit identification.
+The absence of an accepted AT&T identity is not evidence that AT&T lacks service
+or a time broadcast at this location. No AT&T SIB1 was recovered, so its SIB8 or
+SIB16 schedule could not be assessed.
+
+PLMN digits were retained from the existing SIB1 parser in a bench-only copy.
+The AT&T filter was checked using seven independent pycrate-generated vectors,
+covering AT&T, other networks, two-digit MNCs, leading zeros and MCC inheritance.
+The ESP32 performed acquisition, decoding and the network-identity decision;
+the PC independently checked emitted SIB1 bytes and supplied no time or serial
+data. Each candidate had a 20-second budget and up to three SIB1 reads. A pass
+ended after the planned grid, with a separate 600-second overall limit.
+
+The [AT&T survey evidence](evidence/att-coarse-survey-results.json) retains all
+points, firmware hashes, observed MIBs, complete SIB1 payloads, independent ASN.1
+results, synthetic identity checks, diagnostic source changes and serial traces.
+Production library source was unchanged. The original v0.2 automatic-scan image
+was restored with its write hash verified, and its default no-PCI-hint scan boot
+was observed. A new UTC acquisition after restoration was not awaited.
+
 ## Targeted T-Mobile retry: no UTC recovered
 
 A fresh targeted test on the same original ESP32 recovered **one CRC-checked
