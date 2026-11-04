@@ -1,0 +1,36 @@
+{
+  "synced": true,
+  "observer": "serial read only; DTR/RTS false; no serial data sent; observer started after upload reset",
+  "firmware_sha256": "f8e30ace158f126dd2564ef7f777af5343240ab4ecde802d31b7bc1979e9932e",
+  "lines": [
+    {
+      "observer_elapsed_s": 167.828,
+      "line": "No verified LTE time yet. Retrying in five seconds."
+    },
+    {
+      "observer_elapsed_s": 269.378,
+      "line": "UTC synchronized. PCI=284 cell=45012513 captures=69 MIBs=2 ticks=147779827780"
+    },
+    {
+      "observer_elapsed_s": 269.378,
+      "line": "2026-11-04T03:31:03Z"
+    },
+    {
+      "observer_elapsed_s": 270.373,
+      "line": "2026-11-04T03:31:04Z"
+    },
+    {
+      "observer_elapsed_s": 271.373,
+      "line": "2026-11-04T03:31:05Z"
+    }
+  ],
+  "test": "Live RF acquisition using the extracted standalone SetUtcOnBoot example",
+  "tested_chip": "ESP32-D0WD-V3 revision 3.1",
+  "cpu_mhz": 240,
+  "crystal_mhz": 40,
+  "antenna": "onboard only",
+  "firmware_source_commit": "c71c667ba5bc5f9c209f172d0abefcf2523bd0bd",
+  "reset_kind": "esptool upload RTS reset; not a physical power-off test",
+  "timing_note": "Elapsed seconds are from serial observer start after upload reset, not from power-on. No boot-relative acquisition latency is claimed.",
+  "serial_data_bytes_sent": 0
+}

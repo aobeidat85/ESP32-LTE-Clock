@@ -83,6 +83,8 @@ acquisition times. The standalone extraction retains **49 automated tests**.
 See [test findings and hardware details](docs/TEST_FINDINGS.md) and the
 [machine-readable power-cycle evidence](docs/evidence/physical-power-cycle-results.json).
 Historical prototype evidence is clearly separated from package validation.
+The extracted standalone example was also flashed to the same board and
+successfully set UTC from fresh live LTE after an upload reset and one retry.
 
 ## Configuration and limits
 

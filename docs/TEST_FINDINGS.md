@@ -54,6 +54,17 @@ succeeds. Failed attempts are retained in the findings rather than hidden.
 
 ## Standalone package validation
 
+The extracted **SetUtcOnBoot example also synchronized from live RF on the same
+board** after an upload reset. Its first attempt timed out; the automatic retry
+received PCI 284, cell 45012513, two valid MIBs across 69 captures and fresh SIB8
+counter **147779827780**, then printed advancing UTC at
+**2026-11-04 03:31:03Z**, `03:31:04Z`, and `03:31:05Z`.
+The observer sent zero serial data bytes. Success appeared 269.378 seconds after
+the observer started; observation began after the upload reset, so this is not a
+boot-relative latency or a second physical power-cycle test.
+See [standalone-library live evidence](evidence/standalone-library-live-results.json),
+including the tested firmware SHA-256 and source commit.
+
 The extracted package passed **49 tests** locally on Windows using MSVC and
 Python (49 passed in 66.69 seconds). Its standalone example built successfully
 with the pinned PlatformIO configuration: 726,573 bytes of flash and 43,228 bytes
