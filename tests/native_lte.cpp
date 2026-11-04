@@ -12,6 +12,12 @@ using namespace esp32_lte_time;
 static TransportDecoder decoder;
 static RfDecoder rf;
 int main(int argc, char** argv) {
+  if(argc==3&&!std::strcmp(argv[1],"siwindow")){
+    unsigned window=std::atoi(argv[2]);std::printf("[");
+    for(unsigned i=0;i<(window&&window<=40?window*2:1);++i)
+      std::printf("%s%d",i?",":"",siWindowOffset(window,i));
+    std::printf("]\n");return 0;
+  }
   if(argc==2&&!std::strcmp(argv[1],"scanplan")){
     std::printf("[");
     for(unsigned i=0;i<CellScanPlan::count();++i){

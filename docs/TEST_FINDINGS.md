@@ -31,12 +31,37 @@ carrier gets a fresh dwell. A timeout/retry
 continues the scan cursor. These limits bound attempts, not total acquisition
 time; a complete raster search can take hours.
 
-**59 automated tests passed** locally, including the existing end-to-end recorded
+**67 automated tests passed** locally, including the existing end-to-end recorded
 RF/time tests and new blind-discovery tests. Independent NumPy/SciPy vectors
 cover all three PSS roots, both FDD synchronization positions, PCI values 0, 1,
 2, 57, 283 and 503, frequency offsets and noise. Tests also check recorded MIB
 discovery with no PCI, exclusions, cancellation, noise/flat rejection and full
-scan-raster coverage without duplicates.
+scan-raster coverage without duplicates. SI-window traversal tests cover every
+millisecond of all seven permitted window lengths, interleave radio frames,
+verify repeat coverage and reject invalid windows. The final decoder searches
+the announced window rather than assuming SIB8 is transmitted at its start.
+
+**Automatic discovery obtained live UTC after 151.740 seconds from boot** on the
+stated ESP32. It began at 2155 MHz, moved to 2150 MHz without a carrier hint,
+derived PCI 283 and read its time schedule, then moved to another PCI after the
+time attempt failed. It independently derived PCI 284, obtained agreeing MIBs
+and fresh SIB8, and set UTC. Successful evidence was cell 45012513, 96 captures,
+four MIBs and counter **147780007492**. An independent counter/table conversion
+gives reference UTC **2026-11-04 04:00:56.920Z**; the board printed advancing UTC
+at `04:00:57Z`, `04:00:58Z`, and `04:00:59Z`. No serial data bytes or host time
+were supplied.
+
+See [automatic UTC evidence](evidence/auto-scan-utc-results.json). This successful
+hardware revision is commit `2b2150b`, preceding the full-window traversal
+extension; the extension has its own tests. The binary hash was not retained
+before that subsequent build, and is not reconstructed or inferred. This was
+an RTS-reset test, not a new physical power-off test.
+
+A separate fresh boot missed the time-bearing carrier during its snapshot dwell
+and continued to other cells. That exploratory observation was stopped before
+a complete scan; it did not obtain UTC. The
+[retained trace](evidence/auto-scan-missed-dwell-results.json) demonstrates that
+successful timing is not guaranteed for every boot.
 
 An initial live scan on the stated board found an unconfigured **2140 MHz,
 PCI 242** cell, decoded agreeing MIBs and SIB1, then rejected its schedule because
@@ -51,7 +76,7 @@ observations. These are software-reset tests, not physical power-off tests.
 
 Both the Linux native-test and ESP32 firmware-build jobs passed on GitHub
 ([v0.2 implementation validation](https://github.com/aobeidat85/ESP32-LTE-Clock/actions/runs/41769112164)).
-The release example uses 730,869 bytes of flash and 43,284 bytes of static RAM;
+The release example uses 730,957 bytes of flash and 43,284 bytes of static RAM;
 dynamic workspace is approximately 141 KB, including the 40 KB IRAM arena.
 All three capture-SRAM overlap assertions remain present in the link map.
 

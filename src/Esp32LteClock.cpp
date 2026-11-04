@@ -3,6 +3,7 @@
 #include "LteTimeClock.h"
 #include <cmath>
 #include <cstring>
+#include <algorithm>
 
 namespace esp32_lte_time {
 namespace {
@@ -122,10 +123,12 @@ bool Esp32LteClock::receiveTime(const uint32_t* words,uint64_t stamp,Sync found)
     if(r==Result::Ok){evidence_.cellId=schedule.cellId;hasSchedule=true;timeScheduleFound_=true;break;}
   }
   if(!hasSchedule)return false;
-  for(unsigned attempt=0;attempt<16&&!expired();++attempt){
+  for(unsigned attempt=0;attempt<std::max(16u,2u*schedule.windowMs)&&!expired();++attempt){
     report(ClockStatus::ReadingTime);
     if(!track()&&esp_timer_get_time()-int64_t(phase_)>10000000)break;
-    unsigned frame=0,position=schedule.startMs;
+    const int offset=siWindowOffset(schedule.windowMs,attempt);
+    if(offset<0){report(ClockStatus::UnsupportedCell);return false;}
+    unsigned frame=0,position=schedule.startMs+unsigned(offset);
     if(!scheduled(words,stamp,schedule.periodFrames,position/10,position%10,frame))continue;
     size_t bytes=0;
     auto r=rf_.readSystem(words,esp32_lte_raw::Receiver::MaxRawSamples,

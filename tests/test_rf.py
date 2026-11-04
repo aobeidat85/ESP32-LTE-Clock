@@ -9,6 +9,19 @@ from lte_sync_sequences import pss, sss, symbol
 from scipy.signal import resample_poly
 
 
+@pytest.mark.parametrize('window',[1,2,5,10,15,20,40])
+def test_entire_advertised_si_window_is_searched(native,window):
+    offsets=run(native,'siwindow',window)
+    assert sorted(offsets[:window])==list(range(window))
+    assert offsets[:window]==offsets[window:]
+    assert offsets[:min(4,(window+9)//10)]==list(range(0,window,10))[:4]
+    if window==20:assert offsets[:4]==[0,10,1,11]
+
+
+def test_invalid_si_windows_are_rejected(native):
+    for window in [0,41,65535]:assert run(native,'siwindow',window)==[-1]
+
+
 def test_scan_plan_covers_every_reachable_raster_point_once(native):
     plan=run(native,'scanplan')
     expected=set()

@@ -82,13 +82,17 @@ The integrated prototype passed a user-performed USB **power-off/reconnect test*
 it received fresh LTE time and set UTC after **137.384 seconds**, with no host
 time or decoder input. A fresh-reset fast-build test took **190.989 seconds**,
 including a timed-out attempt and retry. These are observations, not guaranteed
-acquisition times. The standalone extraction retains **59 automated tests**.
+acquisition times. The library now passes **67 automated tests**.
 
 See [test findings and hardware details](docs/TEST_FINDINGS.md) and the
 [machine-readable power-cycle evidence](docs/evidence/physical-power-cycle-results.json).
 Historical prototype evidence is clearly separated from package validation.
 The extracted standalone example was also flashed to the same board and
 successfully set UTC from fresh live LTE after an upload reset and one retry.
+Automatic discovery also set UTC after **151.740 seconds from boot**, scanning
+from 2155 to 2150 MHz and falling back from PCI 283 to PCI 284. The findings
+identify that hardware revision separately from the subsequent SI-window-search
+extension and retain unsuccessful observations as well.
 
 ## Configuration and limits
 
@@ -116,6 +120,9 @@ individual attempt, with up to three acquisition attempts per discovered PCI
 before moving on. A verified unsupported profile or time schedule is skipped
 immediately. A cell that advertises time but exhausts its scheduled time attempts
 yields to another PCI on that carrier instead of consuming every retry budget.
+Time acquisition searches offsets throughout the received SIB1 SI window,
+interleaving its radio frames; it does not assume transmission at the window's
+first subframe. The per-cell deadline still applies during this search.
 Rejected PCIs are skipped for the remainder of that dwell, so another cell can
 be considered. Multiple scans or a long search may be needed;
 a full raster scan can take hours. The timeout is checked between bounded DSP

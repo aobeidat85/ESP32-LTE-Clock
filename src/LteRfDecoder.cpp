@@ -183,6 +183,15 @@ Complex RfDecoder::timeSample(size_t index) const {
   return {int16_t(word&65535)/16.f,int16_t(word>>16)/16.f};
 }
 
+int siWindowOffset(unsigned windowMs,unsigned attempt) {
+  if(!windowMs||windowMs>40)return -1;
+  unsigned index=attempt%windowMs;
+  for(unsigned subframe=0;subframe<10;++subframe)
+    for(unsigned offset=subframe;offset<windowMs;offset+=10)
+      if(index--==0)return int(offset);
+  return -1;
+}
+
 bool fitFramePeriod(double first,unsigned firstSfn,double last,unsigned lastSfn,double& period) {
   if(!std::isfinite(first)||!std::isfinite(last)||first<0||last<=first||last-first>60000000||
       firstSfn>=1024||lastSfn>=1024)return false;

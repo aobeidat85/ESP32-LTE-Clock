@@ -1,0 +1,88 @@
+{
+  "test": "Exploratory fresh boot; time-bearing frequency missed during its snapshot dwell; observation stopped before a complete scan",
+  "source_commit": "2b2150b2e1c204d4410525f7075b26d3b3d9c0c1",
+  "synchronized": false,
+  "serial_data_bytes_sent": 0,
+  "rows": [
+    {
+      "received_at": "2026-11-04T03:55:36.675496+00:00",
+      "observer_elapsed_s": 0.443,
+      "line": "LTE boot_ms=109 status=1 carrier_kHz=2155000 PCI=65535 captures=0 MIBs=0"
+    },
+    {
+      "received_at": "2026-11-04T03:55:55.591636+00:00",
+      "observer_elapsed_s": 19.359,
+      "line": "LTE boot_ms=19026 status=1 carrier_kHz=2150000 PCI=65535 captures=24 MIBs=0"
+    },
+    {
+      "received_at": "2026-11-04T03:56:15.220798+00:00",
+      "observer_elapsed_s": 38.988,
+      "line": "LTE boot_ms=38656 status=1 carrier_kHz=2160000 PCI=65535 captures=48 MIBs=0"
+    },
+    {
+      "received_at": "2026-11-04T03:56:34.162043+00:00",
+      "observer_elapsed_s": 57.929,
+      "line": "LTE boot_ms=57598 status=1 carrier_kHz=2145000 PCI=65535 captures=72 MIBs=0"
+    },
+    {
+      "received_at": "2026-11-04T03:56:53.080173+00:00",
+      "observer_elapsed_s": 76.848,
+      "line": "LTE boot_ms=76517 status=1 carrier_kHz=2165000 PCI=65535 captures=96 MIBs=0"
+    },
+    {
+      "received_at": "2026-11-04T03:57:12.002504+00:00",
+      "observer_elapsed_s": 95.77,
+      "line": "LTE boot_ms=95440 status=1 carrier_kHz=2140000 PCI=65535 captures=120 MIBs=0"
+    },
+    {
+      "received_at": "2026-11-04T03:57:15.538971+00:00",
+      "observer_elapsed_s": 99.306,
+      "line": "LTE boot_ms=98977 status=2 carrier_kHz=2140000 PCI=242 captures=124 MIBs=0"
+    },
+    {
+      "received_at": "2026-11-04T03:57:16.136423+00:00",
+      "observer_elapsed_s": 99.904,
+      "line": "LTE boot_ms=99574 status=3 carrier_kHz=2140000 PCI=242 captures=126 MIBs=2"
+    },
+    {
+      "received_at": "2026-11-04T03:57:17.341603+00:00",
+      "observer_elapsed_s": 101.109,
+      "line": "LTE boot_ms=100779 status=8 carrier_kHz=2140000 PCI=242 captures=128 MIBs=3"
+    },
+    {
+      "received_at": "2026-11-04T03:57:17.358918+00:00",
+      "observer_elapsed_s": 101.126,
+      "line": "LTE boot_ms=100797 status=1 carrier_kHz=2140000 PCI=242 captures=128 MIBs=3"
+    },
+    {
+      "received_at": "2026-11-04T03:57:24.390597+00:00",
+      "observer_elapsed_s": 108.158,
+      "line": "LTE boot_ms=107829 status=2 carrier_kHz=2140000 PCI=323 captures=135 MIBs=3"
+    },
+    {
+      "received_at": "2026-11-04T03:57:30.983347+00:00",
+      "observer_elapsed_s": 114.751,
+      "line": "LTE boot_ms=114422 status=1 carrier_kHz=2140000 PCI=323 captures=159 MIBs=3"
+    },
+    {
+      "received_at": "2026-11-04T03:57:39.593199+00:00",
+      "observer_elapsed_s": 123.361,
+      "line": "LTE boot_ms=123032 status=2 carrier_kHz=2140000 PCI=401 captures=168 MIBs=3"
+    },
+    {
+      "received_at": "2026-11-04T03:57:46.169893+00:00",
+      "observer_elapsed_s": 129.937,
+      "line": "LTE boot_ms=129609 status=1 carrier_kHz=2140000 PCI=401 captures=192 MIBs=3"
+    },
+    {
+      "received_at": "2026-11-04T03:57:59.520162+00:00",
+      "observer_elapsed_s": 143.288,
+      "line": "LTE boot_ms=142960 status=2 carrier_kHz=2140000 PCI=65 captures=208 MIBs=3"
+    },
+    {
+      "received_at": "2026-11-04T03:58:06.922754+00:00",
+      "observer_elapsed_s": 150.69,
+      "line": "LTE boot_ms=150363 status=1 carrier_kHz=2140000 PCI=65 captures=232 MIBs=3"
+    }
+  ]
+}
