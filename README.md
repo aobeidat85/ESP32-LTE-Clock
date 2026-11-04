@@ -78,6 +78,14 @@ bank. Insufficient memory or an unsupported configuration returns failure.
 
 ## Test findings
 
+**v0.2.0 passed a physical full-power-off test with automatic scanning.** The user
+removed all board power; the observer measured **9.999 seconds of USB absence**.
+After reconnection, the ESP32 acquired fresh LTE time and set UTC at **46.743
+seconds from boot**, using PCI 284 at 2150 MHz without manual or saved carrier/PCI
+hints. The PC sent zero serial data bytes and only read diagnostics. Five
+advancing UTC readings followed. See the
+[physical automatic-scan evidence](docs/evidence/physical-auto-scan-power-cycle-results.json).
+
 The integrated prototype passed a user-performed USB **power-off/reconnect test**:
 it received fresh LTE time and set UTC after **137.384 seconds**, with no host
 time or decoder input. A fresh-reset fast-build test took **190.989 seconds**,

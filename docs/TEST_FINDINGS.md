@@ -17,6 +17,47 @@
 Do not interpret the `esp32dev` target as identification of a particular board
 manufacturer, or this result as support for ESP32-C3, S3, C5, or every ESP32 module.
 
+## Physical full-power-off test: automatic scan, v0.2.0
+
+**Passed: fresh UTC after 46.743 seconds from boot, following a full power cut.**
+The user confirmed removing all board power, and the observer captured the
+original board's USB disappearance for **9.999 seconds**, then reconnection.
+No firmware upload or software reset occurred during the measured test. The
+reader opened with DTR and RTS deasserted, sent **zero serial data bytes**, and
+provided no time, frequency, PCI, RF samples or decoded results to the ESP32.
+The PC supplied USB power and read diagnostics; RF decoding and clock setting
+ran on the ESP32.
+
+With automatic mode enabled and manual hint fields zero, the board independently
+acquired **2150 MHz, PCI 284**, verified two agreeing MIBs and decoded fresh time
+from cell **45012513** across **49 captures**. Counter **147780099268** is newer
+than the earlier reset-test counter **147780058756**. Independent conversion with
+the saved IERS table gives reference UTC **2026-11-04 04:16:14.680Z**. The board
+then printed `04:16:15Z`, `04:16:16Z`, `04:16:17Z`, `04:16:18Z`, and `04:16:19Z`.
+Absolute UTC accuracy was not calibrated.
+
+Source inspection confirms that `scanCursor_` initializes to zero in ordinary
+RAM and is not restored from RTC memory, NVS, Preferences or EEPROM. The example
+uses default `ClockConfig`: `autoScan=true`, `tuningMHz=0`, `carrierHz=0`, and
+`pcis={0,0}`. Automatic mode ignores those manual hint fields and derives PCI
+from received PSS/SSS. The radio uses RAM storage and no Internet time service.
+Thus neither a saved carrier/PCI nor an existing system calendar establishes
+UTC; fresh decoding and this boot's monotonic reference are required.
+
+See [machine-readable physical-power-cycle evidence](evidence/physical-auto-scan-power-cycle-results.json).
+It identifies the retained v0.2 upload artifact by SHA-256; flash was not reread
+or rewritten during this test. One long garbled/duplicated UART startup record
+was retained locally and omitted from the public copy, with its size and hash
+recorded. The initial scan-start line was not cleanly captured, so this test does
+not claim an observed initial frequency from that record. Complete acquisition,
+MIB, time and advancing-UTC diagnostics were captured after it.
+
+The user's first reported power cycle occurred without a captured removal/boot
+sequence, so advancing clock output from that observation was not counted as a
+pass. The measured pass above came from a repeated power cycle while the logger
+was armed. This result qualifies this board and reception condition; acquisition
+on every boot or with other networks is not guaranteed.
+
 ## v0.2 automatic discovery validation
 
 **The final firmware synchronized from live LTE after 70.000 seconds from boot**

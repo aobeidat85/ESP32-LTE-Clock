@@ -1,0 +1,146 @@
+{
+  "test": "Physical full-power-off automatic LTE UTC reception, firmware v0.2.0",
+  "board": "ESP32-D0WD-V3 revision 3.1; original dual-core ESP32 development board; onboard antenna; CPU 240 MHz / crystal 40 MHz",
+  "user_confirmation": "User confirmed original board disconnected from all power for at least five seconds, then reconnected.",
+  "usb_disconnection_observed_s": 9.999,
+  "software_reset_requested": false,
+  "serial_data_bytes_sent": 0,
+  "pc_role": "USB power and read-only diagnostic observation; no decoding, host time, frequency or PCI supplied",
+  "firmware_source_commit": "62fb14839f4dae768cfdf22f5cbe21020fb5de0b",
+  "firmware_sha256_from_retained_upload_artifact": "ee10a97dff4dcaae620932cbaf49346ab9d9062e085f39b20bade5a246f3d5d8",
+  "firmware_identity_note": "Retained artifact matches the previously uploaded and reset-tested v0.2 image; flash was not reread or reflashed during this physical-power-cycle test.",
+  "configuration_audit": {
+    "autoScan": true,
+    "manual_tuningMHz": 0,
+    "manual_carrierHz": 0,
+    "manual_pcis": [
+      0,
+      0
+    ],
+    "scanCursor_initial": 0,
+    "scanCursor_storage": "Ordinary RAM; no RTC_DATA/NVS/Preferences/EEPROM restore path",
+    "clock_setting": "Requires this boot's fresh MIBs, SIB1 scheduling and CRC-checked SIB8 plus monotonic reference",
+    "radio_storage": "WIFI_STORAGE_RAM; no network association or Internet time request"
+  },
+  "synchronized": true,
+  "boot_ms_at_success": 46743,
+  "carrier_kHz": 2150000,
+  "pci": 284,
+  "cell_id": 45012513,
+  "captures": 49,
+  "mibs": 2,
+  "raw_ticks": 147780099268,
+  "previous_reset_test_raw_ticks": 147780058756,
+  "independent_counter_utc_reference": "2026-11-04T04:16:14.680000+00:00",
+  "gps_minus_utc_seconds": 18,
+  "leap_table_expires": "2027-06-28",
+  "observer": "Local bench observer armed before removal; polls USB presence, opens with DTR/RTS false, reads only; no reset pulse or serial writes. Host timestamps label the log only.",
+  "startup_uart_note": "One very long garbled/duplicated startup record was retained locally and omitted from this public copy. The initial scan-start diagnostic was not cleanly captured; complete acquisition/MIB/time/UTC records below were captured. No first-frequency observation is inferred from the corrupt record.",
+  "omitted_startup_records": [
+    {
+      "received_at": "2026-11-04T04:15:47.292055+00:00",
+      "characters": 732723,
+      "sha256": "097a847f6c5074b1e1d125ca8878e74237a01d332b8ce18119bd31a2855f1b3b"
+    }
+  ],
+  "raw_local_log_sha256": "e0dd5591b26e5e9263a78c396ba8d66d354527503b27574f33f0584c9cce9418",
+  "raw_local_log_bytes": 1100460,
+  "rows": [
+    {
+      "received_at": "2026-11-04T04:12:53.812906+00:00",
+      "observer_elapsed_s": 0.006,
+      "event": "armed",
+      "port": "COM10",
+      "serial_data_bytes_sent": 0,
+      "software_reset_requested": false
+    },
+    {
+      "received_at": "2026-11-04T04:15:18.510185+00:00",
+      "observer_elapsed_s": 144.703,
+      "event": "usb_disconnected"
+    },
+    {
+      "received_at": "2026-11-04T04:15:28.509612+00:00",
+      "observer_elapsed_s": 154.702,
+      "event": "usb_reconnected",
+      "port": "COM10",
+      "usb_absence_s": 9.999
+    },
+    {
+      "received_at": "2026-11-04T04:15:28.520869+00:00",
+      "observer_elapsed_s": 154.714,
+      "event": "read_only_serial_opened",
+      "dtr": false,
+      "rts": false
+    },
+    {
+      "received_at": "2026-11-04T04:15:51.566009+00:00",
+      "observer_elapsed_s": 177.759,
+      "event": "serial_line",
+      "line": "LTE boot_ms=23233 status=2 carrier_kHz=2150000 PCI=284 captures=29 MIBs=0"
+    },
+    {
+      "received_at": "2026-11-04T04:15:53.839211+00:00",
+      "observer_elapsed_s": 180.032,
+      "event": "serial_line",
+      "line": "LTE boot_ms=25506 status=3 carrier_kHz=2150000 PCI=284 captures=37 MIBs=2"
+    },
+    {
+      "received_at": "2026-11-04T04:15:55.404287+00:00",
+      "observer_elapsed_s": 181.597,
+      "event": "serial_line",
+      "line": "LTE boot_ms=27071 status=4 carrier_kHz=2150000 PCI=284 captures=40 MIBs=2"
+    },
+    {
+      "received_at": "2026-11-04T04:16:15.071924+00:00",
+      "observer_elapsed_s": 201.265,
+      "event": "serial_line",
+      "line": "LTE boot_ms=46738 status=5 carrier_kHz=2150000 PCI=284 captures=49 MIBs=2"
+    },
+    {
+      "received_at": "2026-11-04T04:16:15.080211+00:00",
+      "observer_elapsed_s": 201.273,
+      "event": "serial_line",
+      "line": "UTC synchronized. boot_ms=46743 carrier_kHz=2150000 PCI=284 cell=45012513 captures=49 MIBs=2 ticks=147780099268"
+    },
+    {
+      "received_at": "2026-11-04T04:16:15.105377+00:00",
+      "observer_elapsed_s": 201.298,
+      "event": "serial_line",
+      "line": "2026-11-04T04:16:15Z"
+    },
+    {
+      "received_at": "2026-11-04T04:16:16.082353+00:00",
+      "observer_elapsed_s": 202.275,
+      "event": "serial_line",
+      "line": "2026-11-04T04:16:16Z"
+    },
+    {
+      "received_at": "2026-11-04T04:16:17.082276+00:00",
+      "observer_elapsed_s": 203.275,
+      "event": "serial_line",
+      "line": "2026-11-04T04:16:17Z"
+    },
+    {
+      "received_at": "2026-11-04T04:16:18.082214+00:00",
+      "observer_elapsed_s": 204.275,
+      "event": "serial_line",
+      "line": "2026-11-04T04:16:18Z"
+    },
+    {
+      "received_at": "2026-11-04T04:16:19.082212+00:00",
+      "observer_elapsed_s": 205.275,
+      "event": "serial_line",
+      "line": "2026-11-04T04:16:19Z"
+    },
+    {
+      "received_at": "2026-11-04T04:16:19.085280+00:00",
+      "observer_elapsed_s": 205.278,
+      "event": "finished",
+      "synced": true,
+      "advancing_utc_lines": 5,
+      "serial_data_bytes_sent": 0,
+      "software_reset_requested": false
+    }
+  ]
+}
