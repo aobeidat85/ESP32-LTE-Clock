@@ -11,10 +11,14 @@ antenna. `esp32dev` is the PlatformIO build target. A specific development-board
 manufacturer/model has not been established. ESP32-C3/S3/C5 and other variants
 are not supported by this backend.
 
-This is a narrow, measured experimental profile: Verizon LTE near 2150 MHz,
-PCI 284/283, FDD normal CP, 50 resource blocks, four antenna ports and Ng=1.
-It is **not a general LTE-band scanner**. Changing the configuration does not
-establish compatibility with another carrier, band or board.
+**Automatic frequency and PCI discovery is the default.** The device scans
+reachable LTE FDD downlink ranges and derives the physical cell ID from received
+PSS/SSS, with no configured carrier or PCI. It tries discovered cells for fresh
+MIBs and time information, then continues scanning when a cell is unsuitable.
+
+UTC decoding remains experimental: the qualified time-bearing profile is FDD
+normal CP, 50 resource blocks, four antenna ports, Ng=1 and SIB8 GPS-scale time.
+Finding another LTE cell does not establish that its time message is supported.
 
 ## Simple example
 
@@ -24,7 +28,7 @@ establish compatibility with another carrier, band or board.
 static esp32_lte_time::Esp32LteClock lteClock;
 
 void setup() {
-  if (lteClock.sync(180000)) {
+  if (lteClock.sync()) {
     // UTC is set. Use time(), gettimeofday(), or gmtime_r().
   } else {
     // No verified time was obtained. Retry or handle an unset clock.
@@ -63,13 +67,13 @@ platform = espressif32@6.12.0
 board = esp32dev
 framework = arduino
 board_build.f_cpu = 240000000L
-lib_deps = https://github.com/aobeidat85/ESP32-LTE-Clock.git#v0.1.0
+lib_deps = https://github.com/aobeidat85/ESP32-LTE-Clock.git#v0.2.0
 build_flags = -O3
 ```
 
 Keep Wi-Fi and Bluetooth inactive during synchronization. The receiver needs
 exclusive ownership of the radio. It reserves a 64 KB capture aperture and uses
-about 133 KB of reusable DSP workspace, including a 40 KB integer-access IRAM
+about 141 KB of reusable DSP workspace, including a 40 KB integer-access IRAM
 bank. Insufficient memory or an unsupported configuration returns failure.
 
 ## Test findings
@@ -78,7 +82,7 @@ The integrated prototype passed a user-performed USB **power-off/reconnect test*
 it received fresh LTE time and set UTC after **137.384 seconds**, with no host
 time or decoder input. A fresh-reset fast-build test took **190.989 seconds**,
 including a timed-out attempt and retry. These are observations, not guaranteed
-acquisition times. The standalone extraction retains **49 automated tests**.
+acquisition times. The standalone extraction retains **59 automated tests**.
 
 See [test findings and hardware details](docs/TEST_FINDINGS.md) and the
 [machine-readable power-cycle evidence](docs/evidence/physical-power-cycle-results.json).
@@ -88,10 +92,36 @@ successfully set UTC from fresh live LTE after an upload reset and one retry.
 
 ## Configuration and limits
 
-`sync(timeoutMs, config, progress)` accepts a `ClockConfig` and an optional
-progress callback. The default requests LO 2149 MHz, carrier 2150 MHz, PCI 284/283
-and gain-table index 68. This index is not calibrated dB. A timeout is checked
-between bounded DSP operations and can overrun while the current operation ends.
+`sync(timeoutMs, config, progress)` accepts a `ClockConfig` and optional progress
+callback. `sync()` uses a ten-minute budget and automatic scanning. A failed
+attempt leaves the scan cursor ready to resume at the next frequency on the next
+call, as the example does. UTC can only be obtained when a receivable cell
+broadcasts a supported time message.
+
+The scan searches the following unions of FDD downlink ranges, in MHz:
+**2110–2199.9, 1930–1994.9, 1842–1879.9, 2350–2359.9, 2620–2689.9**.
+These cover the reachable portions of bands 1/2/3/4/7/9/10/23/25/30 and overlapping
+extensions. Lower bands and TDD are outside this backend. The channel ranges
+follow [ETSI TS 136 101, section 5.7.3](https://www.etsi.org/deliver/etsi_ts/136100_136199/136101/17.15.00_60/ts_136101v171500p.pdf).
+
+A first pass probes 5 MHz centers from each range's middle outward, followed by
+every remaining 100 kHz point. A complete pass has **2,730 distinct frequencies**.
+The coarse pass prioritizes convenient centers; it does not guarantee that a
+cell is on one. Every point remains in the full scan. There is no learned bench
+frequency or PCI in the default configuration. Blind PSS correlations use FFTs;
+all 504 PCI values are eligible through SSS correlation.
+
+Defaults take 24 snapshots per frequency and allow up to 180 seconds for an
+individual candidate. Rejected PCIs are skipped for the remainder of that dwell,
+so another cell can be considered. Multiple scans or a long search may be needed;
+a full raster scan can take hours. The timeout is checked between bounded DSP
+operations and can overrun while the current operation ends. Gain-table index
+68 is configurable and is not calibrated dB.
+
+For a constrained application, `ClockConfig` exposes `capturesPerFrequency`,
+`cellTimeoutMs`, and `gainIndex`. Manual mode is still available: set
+`autoScan=false` and explicitly supply `tuningMHz`, `carrierHz`, and `pcis`.
+Those manual hint fields default to zero and are ignored during automatic scan.
 
 The implementation requires fresh agreeing MIBs, fresh SIB1 scheduling, SI-RNTI
 CRC16 and transport CRC24 before accepting SIB8 time. It converts GPS-scale time
@@ -116,5 +146,8 @@ pio run -d examples/SetUtcOnBoot
 Native tests build the same decoder with g++ on Linux or MSVC on Windows.
 Reference Python code and RF fixtures are test-only; firmware has no Python
 dependency and the simple example contains no historical RF replay data.
+For optional hardware observation, install `pyserial` and run
+`python tools/observe_boot.py --reset --log build/boot.jsonl`. RTS resets the
+board; the observer sends zero serial data bytes and never supplies time.
 
 GPL-3.0-only. See [third-party notices](THIRD_PARTY_NOTICES.md).

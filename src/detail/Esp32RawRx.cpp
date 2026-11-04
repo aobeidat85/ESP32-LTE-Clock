@@ -86,6 +86,14 @@ bool Receiver::begin(const Config &config) {
   return true;
 }
 
+bool Receiver::tune(uint16_t tuningMHz) {
+  if(!ready_||radioOwner!=this)return fail(Error::NotReady);
+  if(tuningMHz<MinimumTuningMHz||tuningMHz>2800)return fail(Error::InvalidConfig);
+  if(getCpuFrequencyMhz()!=240)return fail(Error::UnsupportedCpu);
+  if(xPortGetCoreID()!=1)return fail(Error::UnsupportedCore);
+  config_.tuningMHz=tuningMHz;prepare();error_=Error::None;return true;
+}
+
 void Receiver::end() {
   if (!ready_ || radioOwner != this) return;
   REG_WRITE(DumpCtrl, 0);

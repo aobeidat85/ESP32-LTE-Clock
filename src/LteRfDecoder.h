@@ -58,6 +58,9 @@ class RfDecoder {
   bool rawStable = true;
   Sync acquire(const uint32_t* raw, size_t count, double carrierOffsetHz, unsigned pci,
                float coarseHz = 0, bool sweepCfo = true);
+  // Blind FDD discovery: all three PSS roots and all 168 SSS groups. No PCI hint.
+  Sync discover(const uint32_t* raw, size_t count, double carrierOffsetHz,
+                const uint16_t* excluded = nullptr, size_t excludedCount = 0);
   Mib readMib(const Sync& sync); // Uses the narrow samples left by acquire().
   Result readSystem(const uint32_t* raw, size_t count, double carrierOffsetHz,
                     unsigned pci, unsigned subframe, uint8_t* payload, size_t& bytes);
@@ -102,7 +105,7 @@ class RfDecoder {
                        unsigned tbs, uint8_t* payload);
 };
 constexpr size_t RfDecoder::workspaceBytes() {
-  return sizeof(RfDecoder)+StorageWords*sizeof(uint32_t)+sizeof(Complex)*(1024+256+1600)
+  return sizeof(RfDecoder)+StorageWords*sizeof(uint32_t)+sizeof(Complex)*(2048+256+1600)
     +sizeof(float)*(PowerCapacity+16*72)+sizeof(TransportDecoder);
 }
 } // namespace esp32_lte_time

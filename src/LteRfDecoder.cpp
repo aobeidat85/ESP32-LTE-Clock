@@ -143,7 +143,7 @@ bool RfDecoder::reserve() {
   if(!sampleBanks_[1]){release();return false;}
   allocationFailure=2;turbo_=new(std::nothrow) TransportDecoder;if(!turbo_){release();return false;}
   allocationFailure=3;pilots_=new(std::nothrow) Complex[4][4][100];if(!pilots_){release();return false;}
-  allocationFailure=4;fft_=new(std::nothrow) Complex[1024];if(!fft_){release();return false;}
+  allocationFailure=4;fft_=new(std::nothrow) Complex[2048];if(!fft_){release();return false;}
   allocationFailure=5;powers_=new(std::nothrow) float[PowerCapacity];if(!powers_){release();return false;}
   allocationFailure=6;control_=new(std::nothrow) float[16*72];if(!control_){release();return false;}
   allocationFailure=7;ring_=new(std::nothrow) Complex[256];if(!ring_){release();return false;}
@@ -358,6 +358,103 @@ Sync RfDecoder::acquire(const uint32_t* raw,size_t count,double offset,unsigned 
       result.frameOffsetUs=.25+(double(start)-832)/1.92-result.subframe*1000.02459;
     }
     if(service)service();
+  }
+  rawStable=fingerprint(raw,count)==before;
+  if(!rawStable)result.found=false;
+  return result;
+}
+
+Sync RfDecoder::discover(const uint32_t* raw,size_t count,double offset,
+                         const uint16_t* excluded,size_t excludedCount) {
+  Sync result;
+  pssPeak=sssPeak=0;rawStable=true;
+  if(!raw||count<12000||count>16380||excludedCount>504||(!excluded&&excludedCount))return result;
+  const uint32_t before=fingerprint(raw,count);
+  if(!resample(raw,count,offset,true))return result;
+  // Preserve narrow samples for MIB decoding. Cache the wide correlation FFT
+  // in unused sample-arena words, with integer-only access to its IRAM bank.
+  constexpr unsigned N=2048, Cache=4096;
+  for(unsigned j=0;j<N;++j)fft_[j]=j<narrowCount_?narrow(j):Complex{0,0};
+  fft(fft_,N);
+  for(unsigned j=0;j<N;++j)storeComplex(Cache+2*j,fft_[j]);
+  float energy=0;
+  for(unsigned j=0;j<128;++j)energy+=narrow(j).power();
+  for(size_t start=0;start+128<=narrowCount_;++start){
+    if(start)energy+=narrow(start+127).power()-narrow(start-1).power();
+    powers_[start]=std::max(energy,1e-20f);
+  }
+  Complex sequence[62],base[128],templ[128],hp[62],secondaryData[62];
+  float sssSequence[62];
+  for(unsigned root=0;root<3;++root){
+    pss(root,sequence);std::fill(base,base+128,Complex{0,0});
+    for(unsigned j=0;j<62;++j)base[syncBin(j)]=sequence[j];
+    fft(base,128,true);
+    for(int hypothesis=0;hypothesis<13;++hypothesis){
+      if(stopping())return {};
+      const float cfo=float(-75000+12500*hypothesis);
+      float templateEnergy=0;
+      std::fill(fft_,fft_+N,Complex{0,0});
+      for(unsigned j=0;j<128;++j){
+        templ[j]=base[j]*phase(2*Pi*cfo*j/1920000);
+        templateEnergy+=templ[j].power();fft_[j]=templ[j];
+      }
+      fft(fft_,N);
+      for(unsigned j=0;j<N;++j)fft_[j]=loadComplex(Cache+2*j)*fft_[j].conjugate();
+      fft(fft_,N,true);
+      // Correlation output is overwritten by the candidate's 128-point FFTs.
+      // Keep only bounded strongest peaks, then verify them with the direct
+      // matched filter and an independent SSS correlation.
+      struct Peak { unsigned start; float score; } peaks[4]={};
+      for(unsigned start=161;start+152<narrowCount_;++start){
+        const float score=fft_[start].power()/(templateEnergy*powers_[start]);
+        pssPeak=std::max(pssPeak,score);
+        if(score<.15f)continue;
+        for(unsigned k=0;k<4;++k)if(score>peaks[k].score){
+          for(unsigned m=3;m>k;--m)peaks[m]=peaks[m-1];
+          peaks[k]={start,score};break;
+        }
+      }
+      for(const auto& peak:peaks){
+        if(!peak.score)continue;
+        const unsigned start=peak.start;
+        Complex direct{0,0};
+        for(unsigned j=0;j<128;++j)direct=direct+narrow(start+j)*templ[j].conjugate();
+        const float score=direct.power()/(templateEnergy*powers_[start]);
+        if(score<.15f)continue;
+        for(unsigned j=0;j<128;++j)fft_[j]=narrow(start+j)*phase(-2*Pi*cfo*(start+j)/1920000);
+        fft(fft_,128);
+        for(unsigned j=0;j<62;++j)hp[j]=fft_[syncBin(j)]*sequence[j].conjugate();
+        for(unsigned j=0;j<128;++j)fft_[j]=narrow(start-137+j)*phase(-2*Pi*cfo*(start-137+j)/1920000);
+        fft(fft_,128);
+        float norm=0;
+        for(unsigned j=0;j<62;++j){
+          secondaryData[j]=fft_[syncBin(j)];norm+=(secondaryData[j]*hp[j].conjugate()).power();
+        }
+        for(unsigned group=0;group<168;++group){
+          if(group%32==0&&stopping())return {};
+          const unsigned pci=3*group+root;
+          bool skip=false;
+          for(size_t k=0;k<excludedCount;++k)if(excluded[k]==pci){skip=true;break;}
+          if(skip)continue;
+          for(unsigned half=0;half<2;++half){
+            sss(pci,half?5:0,sssSequence);
+            Complex correlation{0,0};
+            for(unsigned j=0;j<62;++j)correlation=correlation+secondaryData[j]*hp[j].conjugate()*sssSequence[j];
+            const float secondary=correlation.power()/std::max(62*norm,1e-20f);
+            sssPeak=std::max(sssPeak,secondary);
+            if(secondary<.20f||score*secondary<=result.pssScore*result.sssScore)continue;
+            Complex cross{0,0};
+            for(unsigned j=0;j<62;++j)cross=cross+hp[j].conjugate()*secondaryData[j]*sssSequence[j];
+            const float residual=float(-std::atan2(cross.i,cross.r)/(2*Pi*137/1920000));
+            result.found=true;result.pci=uint16_t(pci);result.pssStart=uint16_t(start);
+            result.subframe=half?5:0;result.pssScore=score;result.sssScore=secondary;
+            result.carrierCorrectionHz=cfo+residual;
+            result.frameOffsetUs=.25+(double(start)-832)/1.92-result.subframe*1000.02459;
+          }
+        }
+      }
+      if(service)service();
+    }
   }
   rawStable=fingerprint(raw,count)==before;
   if(!rawStable)result.found=false;

@@ -17,6 +17,36 @@
 Do not interpret the `esp32dev` target as identification of a particular board
 manufacturer, or this result as support for ESP32-C3, S3, C5, or every ESP32 module.
 
+## v0.2 automatic discovery validation
+
+Default configuration now scans frequency and derives PCI from PSS/SSS without
+carrier/PCI hints. The full deterministic plan contains 2,730 distinct 100 kHz
+points over five reachable FDD downlink ranges. It tries 5 MHz centers first,
+then all other raster points. Each frequency gets 24 snapshots; a candidate gets
+up to 180 seconds for fresh MIBs, SIB1 scheduling and SIB8 time. A timeout/retry
+continues the scan cursor. These limits bound attempts, not total acquisition
+time; a complete raster search can take hours.
+
+**59 automated tests passed** locally, including the existing end-to-end recorded
+RF/time tests and new blind-discovery tests. Independent NumPy/SciPy vectors
+cover all three PSS roots, both FDD synchronization positions, PCI values 0, 1,
+2, 57, 283 and 503, frequency offsets and noise. Tests also check recorded MIB
+discovery with no PCI, exclusions, cancellation, noise/flat rejection and full
+scan-raster coverage without duplicates.
+
+An initial live scan on the stated board found an unconfigured **2140 MHz,
+PCI 242** cell, decoded agreeing MIBs and SIB1, then rejected its schedule because
+it did not advertise the supported SIB8 time message. The scan continued. A
+later shorter-budget run found **2150 MHz, PCI 284** and its time schedule but
+exhausted the initial 60-second per-cell budget before UTC. That observation led
+to the release's 180-second budget. Synchronization hypotheses are not treated
+as verified cells or time; MIB and transport CRC checks remain mandatory.
+
+Scanning does not extend the SIB8/time transport profile: 50 RB, four antenna
+ports, Ng=1, normal-CP FDD remain the qualified time-decoder parameters. Discovery
+at other frequencies is not evidence of calibrated RF sensitivity, complete
+regional coverage or supported UTC messages on every carrier.
+
 ## Hardware findings from the integrated prototype
 
 The LTE clock was first implemented in

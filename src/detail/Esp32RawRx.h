@@ -29,6 +29,7 @@ class Receiver {
   Receiver& operator=(const Receiver&) = delete;
   static constexpr size_t MaxRawSamples = 16380;
   bool begin(const Config& config = Config());
+  bool tune(uint16_t tuningMHz);
   void end();
   Error lastError() const { return error_; }
   CaptureResult captureRaw(uint32_t* output,size_t count,uint64_t* startedUptimeUs=nullptr,uint64_t targetUptimeUs=0);

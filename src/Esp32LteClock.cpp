@@ -11,7 +11,7 @@ bool supported(const Mib& m) {
   return m.valid && m.resourceBlocks==50 && m.ports==4 && !m.extendedPhich && m.phichResource==1;
 }
 }
-bool Esp32LteClock::expired() const { return esp_timer_get_time()>=deadline_; }
+bool Esp32LteClock::expired() const { return esp_timer_get_time()>=deadline_||(cellDeadline_&&esp_timer_get_time()>=cellDeadline_); }
 void Esp32LteClock::report(ClockStatus s) { status_=s;if(progress_)progress_(s,evidence_); }
 
 bool Esp32LteClock::capture(const uint32_t*& words,uint64_t& stamp,uint64_t target) {
@@ -24,7 +24,7 @@ bool Esp32LteClock::capture(const uint32_t*& words,uint64_t& stamp,uint64_t targ
   for(unsigned j=5;j<result.count;++j)if((words[j]&0xfffff)!=(words[4]&0xfffff)){varying=true;break;}
   if(!varying){
     radio_.end();delay(2);
-    esp32_lte_raw::Config config;config.tuningMHz=config_.tuningMHz;config.gainIndex=config_.gainIndex;
+    esp32_lte_raw::Config config;config.tuningMHz=activeTuningMHz_;config.gainIndex=config_.gainIndex;
     config.minimalWifiBuffers=true;
     if(!radio_.begin(config))report(ClockStatus::RadioError);
   }
@@ -46,12 +46,12 @@ bool Esp32LteClock::scheduled(const uint32_t*& words,uint64_t& stamp,unsigned pe
 bool Esp32LteClock::acquire(const uint32_t* words,uint64_t stamp,Sync candidate) {
   report(ClockStatus::Acquiring);
   phase_=double(stamp)+candidate.frameOffsetUs;period_=10000.2459;
-  carrier_=config_.carrierHz+candidate.carrierCorrectionHz;
+  carrier_=activeCarrierHz_+candidate.carrierCorrectionHz;
   double firstTime=0;unsigned firstSfn=0;
   for(unsigned attempt=0;attempt<24&&!expired();++attempt){
     Mib mib=rf_.readMib(candidate);
     evidence_.pssScore=candidate.pssScore;evidence_.sssScore=candidate.sssScore;
-    evidence_.carrierCorrectionHz=float(carrier_-config_.carrierHz);
+    evidence_.carrierCorrectionHz=float(carrier_-activeCarrierHz_);
     if(attempt%4==0)report(ClockStatus::Acquiring);
     if(mib.valid){
       ++evidence_.mibs;
@@ -72,7 +72,7 @@ bool Esp32LteClock::acquire(const uint32_t* words,uint64_t stamp,Sync candidate)
     uint64_t target=uint64_t(std::llround(phase_+n*period_-8));
     if(!capture(words,stamp,target)){candidate.found=false;continue;}
     candidate=rf_.acquire(words,esp32_lte_raw::Receiver::MaxRawSamples,
-                           carrier_-config_.tuningMHz*1000000.0,pci_,0,false);
+                           carrier_-activeTuningMHz_*1000000.0,pci_,0,false);
     if(!candidate.found||candidate.subframe!=0)continue;
     phase_=double(stamp)+candidate.frameOffsetUs;
     carrier_+=candidate.carrierCorrectionHz;
@@ -86,7 +86,7 @@ bool Esp32LteClock::track() {
     unsigned sf=attempt%2?5:0;
     if(!scheduled(words,stamp,2,0,sf,expected))continue;
     Sync sync=rf_.acquire(words,esp32_lte_raw::Receiver::MaxRawSamples,
-                          carrier_-config_.tuningMHz*1000000.0,pci_,0,false);
+                          carrier_-activeTuningMHz_*1000000.0,pci_,0,false);
     if(!sync.found||sync.subframe!=sf)continue;
     double observed=double(stamp)+sync.frameOffsetUs;
     int64_t n=int64_t(std::llround((observed-phase_)/period_));
@@ -102,19 +102,74 @@ bool Esp32LteClock::track() {
   return false;
 }
 
+bool Esp32LteClock::receiveTime(const uint32_t* words,uint64_t stamp,Sync found) {
+  if(!acquire(words,stamp,found))return false;
+  uint8_t payload[MaxTransportBits/8];
+  SiSchedule schedule;bool hasSchedule=false;
+  for(unsigned attempt=0;attempt<10&&!expired();++attempt){
+    report(ClockStatus::ReadingSchedule);
+    // A recent CRC-fitted anchor can still target a CRC-checked SI window
+    // when a tracking snapshot fades. Abandon it after a bounded interval.
+    if(!track()&&esp_timer_get_time()-int64_t(phase_)>10000000)break;
+    unsigned frame=0;
+    if(!scheduled(words,stamp,2,0,5,frame))continue;
+    size_t bytes=0;
+    auto r=rf_.readSystem(words,esp32_lte_raw::Receiver::MaxRawSamples,
+        carrier_-activeTuningMHz_*1000000.0,pci_,5,payload,bytes);
+    if(r!=Result::Ok)continue;
+    r=parseSib1Schedule(payload,bytes,schedule);
+    if(r==Result::NoTime){report(ClockStatus::UnsupportedCell);break;}
+    if(r==Result::Ok){evidence_.cellId=schedule.cellId;hasSchedule=true;break;}
+  }
+  if(!hasSchedule)return false;
+  for(unsigned attempt=0;attempt<16&&!expired();++attempt){
+    report(ClockStatus::ReadingTime);
+    if(!track()&&esp_timer_get_time()-int64_t(phase_)>10000000)break;
+    unsigned frame=0,position=schedule.startMs;
+    if(!scheduled(words,stamp,schedule.periodFrames,position/10,position%10,frame))continue;
+    size_t bytes=0;
+    auto r=rf_.readSystem(words,esp32_lte_raw::Receiver::MaxRawSamples,
+        carrier_-activeTuningMHz_*1000000.0,pci_,position%10,payload,bytes);
+    Sib8Time time;UtcTime utc;
+    if(r!=Result::Ok||parseSib8(payload,bytes,time)!=Result::Ok)continue;
+    if(toUtc(time,utc)!=Result::Ok){report(ClockStatus::ConversionError);return false;}
+    int64_t reference=0;
+    if(sib8ReferenceUptime(schedule,frame,position%10,stamp,rf_.timingStart,period_,reference)!=Result::Ok)continue;
+    evidence_.rawTicks=time.ticks;evidence_.referenceUptimeUs=reference;
+    evidence_.utcAtReferenceUs=utc.unixUs;evidence_.timingSample=rf_.timingStart;
+    evidence_.timePayloadBytes=uint8_t(bytes);
+    std::memcpy(evidence_.timePayload,payload,bytes);
+    // Decode delay is accounted for by the same boot's monotonic clock.
+    if(expired()||!setUtcFromBoundary(utc,reference,config_.maxObservationAgeUs))continue;
+    report(ClockStatus::Synced);return true;
+  }
+  return false;
+}
+
 bool Esp32LteClock::sync(uint32_t timeoutMs,const ClockConfig& config,ClockProgress progress) {
-  radio_.end();config_=config;progress_=progress;evidence_={};
-  if(!timeoutMs||timeoutMs>3600000||!std::isfinite(config.carrierHz)||
-     std::fabs(config.carrierHz-config.tuningMHz*1000000.0)>6000000||
-     config.pcis[0]>503||config.pcis[1]>503||!config.maxObservationAgeUs){
+  radio_.end();config_=config;progress_=progress;evidence_={};cellDeadline_=0;
+  if(!timeoutMs||timeoutMs>3600000||!config.maxObservationAgeUs||
+     !config.capturesPerFrequency||config.capturesPerFrequency>32||
+     !config.cellTimeoutMs||config.cellTimeoutMs>3600000||
+     (!config.autoScan&&(!std::isfinite(config.carrierHz)||
+       std::fabs(config.carrierHz-config.tuningMHz*1000000.0)>6000000||
+       config.pcis[0]>503||config.pcis[1]>503))){
     report(ClockStatus::RadioError);return false;
   }
   deadline_=esp_timer_get_time()+int64_t(timeoutMs)*1000;
+  auto selectFrequency=[&](){
+    const uint16_t f=CellScanPlan::frequency(scanCursor_);
+    activeCarrierHz_=config.autoScan?double(f)*100000:config.carrierHz;
+    activeTuningMHz_=config.autoScan?CellScanPlan::tuningMHz(f):config.tuningMHz;
+    evidence_.carrier100kHz=uint16_t(std::llround(activeCarrierHz_/100000));
+    evidence_.tuningMHz=activeTuningMHz_;++evidence_.scanVisits;
+    evidence_.pci=65535;evidence_.sfn=0;evidence_.cellId=0;
+    evidence_.pssScore=evidence_.sssScore=evidence_.carrierCorrectionHz=0;
+  };
+  selectFrequency();
   esp32_lte_raw::Config radioConfig;
-  radioConfig.tuningMHz=config.tuningMHz;radioConfig.gainIndex=config.gainIndex;
+  radioConfig.tuningMHz=activeTuningMHz_;radioConfig.gainIndex=config.gainIndex;
   radioConfig.minimalWifiBuffers=true;
-  // Reserve large contiguous DSP buffers before Wi-Fi's smaller allocations
-  // fragment SRAM. The private RF aperture itself is reserved at boot.
   if(!rf_.reserve()){evidence_.allocationFailure=rf_.allocationFailure;report(ClockStatus::NoMemory);return false;}
   if(!radio_.begin(radioConfig)){
     evidence_.radioError=uint8_t(radio_.lastError());rf_.release();report(ClockStatus::RadioError);return false;
@@ -122,68 +177,50 @@ bool Esp32LteClock::sync(uint32_t timeoutMs,const ClockConfig& config,ClockProgr
   rf_.service=serviceClockDecoder;
   rf_.cancelled=[](void* context){return static_cast<Esp32LteClock*>(context)->expired();};
   rf_.cancelContext=this;
-  uint8_t payload[MaxTransportBits/8];
-  while(!expired()){
+  unsigned dwell=0,excludedCount=0;
+  uint16_t excluded[32]={};
+  while(esp_timer_get_time()<deadline_){
+    cellDeadline_=0;
+    if(config.autoScan&&dwell>=config.capturesPerFrequency){
+      scanCursor_=(scanCursor_+1)%CellScanPlan::count();selectFrequency();
+      dwell=0;excludedCount=0;
+      if(!radio_.tune(activeTuningMHz_)){
+        evidence_.radioError=uint8_t(radio_.lastError());
+        radio_.end();rf_.release();report(ClockStatus::RadioError);return false;
+      }
+    }
     report(ClockStatus::Searching);
     const uint32_t* words=nullptr;uint64_t stamp=0;
+    ++dwell;
     if(!capture(words,stamp))continue;
-    for(unsigned candidateIndex=0;candidateIndex<2&&!expired();++candidateIndex){
-      pci_=config.pcis[candidateIndex];
-      Sync found=rf_.acquire(words,esp32_lte_raw::Receiver::MaxRawSamples,
-                             config.carrierHz-config.tuningMHz*1000000.0,pci_,0,true);
+    for(unsigned candidateIndex=0;candidateIndex<(config.autoScan?1u:2u)&&!expired();++candidateIndex){
+      Sync found;
+      if(config.autoScan){
+        found=rf_.discover(words,esp32_lte_raw::Receiver::MaxRawSamples,
+                          activeCarrierHz_-activeTuningMHz_*1000000.0,excluded,excludedCount);
+      }else{
+        found=rf_.acquire(words,esp32_lte_raw::Receiver::MaxRawSamples,
+                         activeCarrierHz_-activeTuningMHz_*1000000.0,config.pcis[candidateIndex],0,true);
+      }
       evidence_.rawStable=rf_.rawStable;
-      if(!found.found){
-        evidence_.pci=pci_;evidence_.pssScore=rf_.pssPeak;evidence_.sssScore=rf_.sssPeak;
-        report(ClockStatus::Searching);continue;
-      }
+      evidence_.pssScore=rf_.pssPeak;evidence_.sssScore=rf_.sssPeak;
+      if(!found.found)continue;
+      pci_=found.pci;evidence_.pci=pci_;++evidence_.discoveredCells;
+      evidence_.cellId=0;
       evidence_.pssScore=found.pssScore;evidence_.sssScore=found.sssScore;
-      evidence_.pci=pci_;
-      if(!acquire(words,stamp,found))break; // acquire() consumed/replaced the raw lease.
-      SiSchedule schedule;bool hasSchedule=false;
-      for(unsigned attempt=0;attempt<10&&!expired();++attempt){
-        report(ClockStatus::ReadingSchedule);
-        // A recent CRC-fitted anchor can still target a CRC-checked SI window
-        // when a tracking snapshot fades. Abandon it after a bounded interval.
-        if(!track()&&esp_timer_get_time()-int64_t(phase_)>10000000)break;
-        unsigned frame=0;
-        if(!scheduled(words,stamp,2,0,5,frame))continue;
-        size_t bytes=0;
-        auto r=rf_.readSystem(words,esp32_lte_raw::Receiver::MaxRawSamples,
-            carrier_-config.tuningMHz*1000000.0,pci_,5,payload,bytes);
-        if(r!=Result::Ok)continue;
-        r=parseSib1Schedule(payload,bytes,schedule);
-        if(r==Result::NoTime){report(ClockStatus::UnsupportedCell);break;}
-        if(r==Result::Ok){evidence_.cellId=schedule.cellId;hasSchedule=true;break;}
+      cellDeadline_=esp_timer_get_time()+int64_t(config.cellTimeoutMs)*1000;
+      if(receiveTime(words,stamp,found)){
+        cellDeadline_=0;radio_.end();rf_.release();return true;
       }
-      if(!hasSchedule)break;
-      for(unsigned attempt=0;attempt<16&&!expired();++attempt){
-        report(ClockStatus::ReadingTime);
-        if(!track()&&esp_timer_get_time()-int64_t(phase_)>10000000)break;
-        unsigned frame=0,position=schedule.startMs;
-        if(!scheduled(words,stamp,schedule.periodFrames,position/10,position%10,frame))continue;
-        size_t bytes=0;
-        auto r=rf_.readSystem(words,esp32_lte_raw::Receiver::MaxRawSamples,
-            carrier_-config.tuningMHz*1000000.0,pci_,position%10,payload,bytes);
-        Sib8Time time;UtcTime utc;
-        if(r!=Result::Ok||parseSib8(payload,bytes,time)!=Result::Ok)continue;
-        if(toUtc(time,utc)!=Result::Ok){report(ClockStatus::ConversionError);radio_.end();rf_.release();return false;}
-        int64_t reference=0;
-        if(sib8ReferenceUptime(schedule,frame,position%10,stamp,rf_.timingStart,period_,reference)!=Result::Ok)continue;
-        evidence_.rawTicks=time.ticks;evidence_.referenceUptimeUs=reference;
-        evidence_.utcAtReferenceUs=utc.unixUs;evidence_.timingSample=rf_.timingStart;
-        evidence_.timePayloadBytes=uint8_t(bytes);
-        std::memcpy(evidence_.timePayload,payload,bytes);
-        // Decode delay is accounted for by the same boot's monotonic clock.
-        if(expired()||!setUtcFromBoundary(utc,reference,config.maxObservationAgeUs))continue;
-        radio_.end();rf_.release();report(ClockStatus::Synced);return true;
-      }
-      break;
+      ++evidence_.rejectedCells;
+      if(config.autoScan&&excludedCount<32)excluded[excludedCount++]=pci_;
+      cellDeadline_=0;
+      break; // Acquisition replaced the borrowed raw sample lease.
     }
-    // Include sub-millisecond jitter: whole-millisecond delays alone can keep
-    // every 0.84 ms search window in the same blind part of a 5 ms PSS cycle.
-    delay(13);
-    delayMicroseconds(esp_random()%5000);
+    delay(13);delayMicroseconds(esp_random()%5000);
   }
-  radio_.end();rf_.release();report(ClockStatus::TimedOut);return false;
+  // Resume at the next frequency after a timed-out dwell on a later sync().
+  if(config.autoScan)scanCursor_=(scanCursor_+1)%CellScanPlan::count();
+  cellDeadline_=0;radio_.end();rf_.release();report(ClockStatus::TimedOut);return false;
 }
 } // namespace esp32_lte_time

@@ -5,6 +5,66 @@ from pathlib import Path
 import numpy as np
 import pytest
 from test_decoder import native, run, FIXTURES, PROOF
+from lte_sync_sequences import pss, sss, symbol
+from scipy.signal import resample_poly
+
+
+def test_scan_plan_covers_every_reachable_raster_point_once(native):
+    plan=run(native,'scanplan')
+    expected=set()
+    for first,last in [(21100,21999),(19300,19949),(18420,18799),(23500,23599),(26200,26899)]:
+        expected.update(range(first,last+1))
+    assert len(plan)==len(expected)==len({f for f,lo in plan})
+    assert {f for f,lo in plan}==expected
+    assert [f for f,lo in plan[:3]]==[21550,21500,21600]
+    assert all(1842<=lo<=2800 and abs(f*100000-lo*1000000)<=6000000 for f,lo in plan)
+
+
+def test_blind_discovery_decodes_recorded_mib_without_pci(native):
+    r=run(native,'discover',FIXTURES/'mib-raw.u32',1000000,65535,0)
+    assert r['found'] and r['pci']==284 and r['mib']
+    assert (r['sfn'],r['nrb'],r['ports'],r['ng'])==(49,50,4,1)
+    assert abs(r['start']-853)<=1
+
+
+@pytest.mark.parametrize('pci,half,cfo',[(0,0,0),(1,5,-51000),(2,0,38000),
+                                      (57,5,0),(283,0,-52000),(503,5,62000)])
+def test_blind_discovery_all_pss_roots_and_sss_extremes(native,tmp_path,pci,half,cfo):
+    # Independent NumPy frequency-domain PSS/SSS and SciPy interpolation.
+    y=np.zeros(1966,complex)
+    for start,sequence in [(716,sss(pci//3,pci%3,half)),(853,pss(pci%3))]:
+        ofdm=symbol(sequence)
+        y[start:start+128]=ofdm
+        y[start-9:start]=ofdm[-9:]
+    x=resample_poly(y,25,3)[:16380]
+    x*=np.exp(2j*np.pi*(1000000+cfo)*np.arange(len(x))/16000000)
+    x*=220/max(abs(x))
+    rng=np.random.default_rng(pci+half)
+    x+=rng.normal(0,1,len(x))+1j*rng.normal(0,1,len(x))
+    i=np.clip(np.rint(x.real),-512,511).astype(np.int32)
+    q=np.clip(np.rint(x.imag),-512,511).astype(np.int32)
+    p=tmp_path/'synthetic.u32';(((i&1023)<<10)|(q&1023)).astype('<u4').tofile(p)
+    r=run(native,'discover',p,1000000,65535,0)
+    assert r['found'] and r['pci']==pci and r['sf']==half
+    assert abs(r['cfo']-cfo)<8000
+    assert not r['mib'] # A synchronization hypothesis alone cannot verify a cell.
+
+
+def test_blind_discovery_exclusions_and_cancellation(native):
+    p=FIXTURES/'mib-raw.u32'
+    excluded=run(native,'discover',p,1000000,284,0)
+    assert not excluded['found'] or excluded['pci']!=284
+    assert not excluded['mib'] # SSS cross-correlation hypotheses are not CRC-verified cells.
+    assert not run(native,'discover',p,1000000,65535,0,-1)['found']
+
+
+def test_blind_discovery_rejects_flat_and_noise(native,tmp_path):
+    rng=np.random.default_rng(584)
+    for name,words in [('flat',np.zeros(16380,dtype='<u4')),
+                       ('noise',rng.integers(0,1<<20,16380,dtype='<u4'))]:
+        p=tmp_path/(name+'.u32');words.tofile(p)
+        r=run(native,'discover',p,1000000,65535,0)
+        assert not r['found'] and not r['mib']
 
 
 def test_raw_iq_to_crc_valid_sib8_and_utc(native):

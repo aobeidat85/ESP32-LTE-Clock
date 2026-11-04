@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 #include "LteTimeDecoder.h"
 #include "LteRfDecoder.h"
+#include "LteCellScan.h"
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -11,6 +12,14 @@ using namespace esp32_lte_time;
 static TransportDecoder decoder;
 static RfDecoder rf;
 int main(int argc, char** argv) {
+  if(argc==2&&!std::strcmp(argv[1],"scanplan")){
+    std::printf("[");
+    for(unsigned i=0;i<CellScanPlan::count();++i){
+      const auto f=CellScanPlan::frequency(i);
+      std::printf("%s[%u,%u]",i?",":"",f,CellScanPlan::tuningMHz(f));
+    }
+    std::printf("]\n");return 0;
+  }
   if(argc==6&&!std::strcmp(argv[1],"fit")){
     double period=0;
     bool ok=fitFramePeriod(std::atof(argv[2]),std::atoi(argv[3]),std::atof(argv[4]),std::atoi(argv[5]),period);
@@ -24,18 +33,22 @@ int main(int argc, char** argv) {
                               std::atoi(argv[8]),std::atof(argv[9]),value);
     std::printf("{\"status\":%u,\"reference\":%lld}\n",unsigned(r),(long long)value);return 0;
   }
-  if (argc >= 6 && (!std::strcmp(argv[1], "rf") || !std::strcmp(argv[1], "sync"))) {
+  if (argc >= 6 && (!std::strcmp(argv[1], "rf") || !std::strcmp(argv[1], "sync") || !std::strcmp(argv[1], "discover"))) {
     std::ifstream file(argv[2], std::ios::binary);
     std::vector<uint8_t> input{std::istreambuf_iterator<char>(file), {}};
     if (!file || input.size()%4) return 3;
     std::vector<uint32_t> raw(input.size()/4); std::memcpy(raw.data(),input.data(),input.size());
     double offset=std::strtod(argv[3],nullptr); unsigned pci=std::atoi(argv[4]);
-    if (!std::strcmp(argv[1], "sync")) {
-      auto s=rf.acquire(raw.data(),raw.size(),offset,pci,float(std::atof(argv[5])),argc<7||std::atoi(argv[6]));
+    if (!std::strcmp(argv[1], "sync") || !std::strcmp(argv[1], "discover")) {
+      uint16_t excluded=uint16_t(pci);
+      if(argc>=7&&std::atoi(argv[6])<0)rf.cancelled=[](void*){return true;};
+      auto s=!std::strcmp(argv[1], "discover")?
+        rf.discover(raw.data(),raw.size(),offset,pci<=503?&excluded:nullptr,pci<=503?1:0):
+        rf.acquire(raw.data(),raw.size(),offset,pci,float(std::atof(argv[5])),argc<7||std::atoi(argv[6]));
       auto m=rf.readMib(s);
-      std::printf("{\"found\":%s,\"pss\":%.7g,\"sss\":%.7g,\"start\":%u,\"sf\":%u,\"cfo\":%.7g,"
+      std::printf("{\"pci\":%u,\"found\":%s,\"pss\":%.7g,\"sss\":%.7g,\"start\":%u,\"sf\":%u,\"cfo\":%.7g,"
         "\"frame_offset_us\":%.10g,\"mib\":%s,\"sfn\":%u,\"nrb\":%u,\"ports\":%u,\"ng\":%.7g}\n",
-        s.found?"true":"false",s.pssScore,s.sssScore,s.pssStart,s.subframe,s.carrierCorrectionHz,
+        s.pci,s.found?"true":"false",s.pssScore,s.sssScore,s.pssStart,s.subframe,s.carrierCorrectionHz,
         s.frameOffsetUs,m.valid?"true":"false",m.sfn,m.resourceBlocks,m.ports,m.phichResource);
       return 0;
     }
