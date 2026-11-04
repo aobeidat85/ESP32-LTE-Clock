@@ -78,6 +78,12 @@ bank. Insufficient memory or an unsupported configuration returns failure.
 
 ## Test findings
 
+A targeted **T-Mobile retry did not recover UTC**. Fresh SIB1 from PLMN 310-260
+at 2140 MHz / PCI 242 advertised neither SIB8 nor SIB16. A second previously
+identified target at 1955 MHz / PCI 377 was not reacquired. These observations
+apply to the tested cells and attempts; broader T-Mobile UTC support remains
+unverified. See [the detailed findings](docs/TEST_FINDINGS.md#targeted-t-mobile-retry-no-utc-recovered).
+
 **v0.2.0 passed a physical full-power-off test with automatic scanning.** The user
 removed all board power; the observer measured **9.999 seconds of USB absence**.
 After reconnection, the ESP32 acquired fresh LTE time and set UTC at **46.743

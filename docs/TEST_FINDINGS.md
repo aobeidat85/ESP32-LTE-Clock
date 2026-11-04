@@ -17,6 +17,48 @@
 Do not interpret the `esp32dev` target as identification of a particular board
 manufacturer, or this result as support for ESP32-C3, S3, C5, or every ESP32 module.
 
+## Targeted T-Mobile retry: no UTC recovered
+
+A fresh targeted test on the same original ESP32 recovered **one CRC-checked
+T-Mobile SIB1 at 2140 MHz, PCI 242**, but **no UTC from T-Mobile**. Its decoded
+PLMN was **310-260**, matching [T-Mobile's own MCC/MNC settings](https://www.t-mobile.com/support/devices/not-sold-by-t-mobile/byod-t-mobile-data-and-apn-settings).
+The received cell identity was **169016579**, TAC **32539**, primary band **4**.
+Its schedule listed SIB3, SIB5, SIB7 and SIB24; SIB2 is implicit in the first
+entry. **Neither SIB8 nor SIB16 was advertised.** Relative frame counters do not
+provide the missing calendar/UTC reference.
+
+| Target | Trial | Fresh result | Captures / valid MIBs | UTC accepted |
+|---|---:|---|---:|---|
+| 2140 MHz, PCI 242 | 1 | Agreeing MIBs and SIB1; no SIB8/SIB16 scheduled | 12 / 2 | No |
+| 2140 MHz, PCI 242 | 2 | Acquisition timeout | 21 / 0 | No |
+| 1955 MHz, PCI 377 | 1 | Acquisition timeout | 21 / 0 | No |
+| 1955 MHz, PCI 377 | 2 | Acquisition timeout | 21 / 0 | No |
+
+The 1955 MHz target was identified as T-Mobile in earlier experiments, but its
+identity and current schedule were **not reverified** in these attempts. The
+timeouts are not evidence that this cell lacks broadcast time. The successful
+2140 MHz SIB1 is a fresh observation; earlier messages are not counted in the
+table above. This is not a network-wide result or a proof that every T-Mobile
+cell lacks time information.
+
+For repeatable carrier isolation, the diagnostic build used the two known
+frequency/PCI profiles rather than blind automatic carrier selection. It was an
+isolated copy of the v0.2 library, with SIB1 payload logging and early return
+after an unsupported-cell outcome. The ESP32 performed RF acquisition,
+control/data decoding and core SIB1 schedule parsing. The PC independently
+interpreted the printed payload with pycrate to verify PLMN and the complete
+SIB mapping, including the absence of SIB16. No host time or serial data bytes
+were supplied. The diagnostic did not register with the network or request
+connected-mode time; it recovered no new T-Mobile time counter in any trial.
+
+The [targeted-test evidence](evidence/tmobile-targeted-retry-results.json) contains
+the exact payload, independent ASN.1 result, probe firmware hash, bench source
+and instrumentation diff, all four trial results and serial observations.
+Production library code was unchanged. The original v0.2 automatic-scan image
+was restored with its write hash verified, and a new automatic-scan boot was
+observed. A new UTC acquisition after restoration was not awaited; the probe is
+no longer installed and the board continues scanning autonomously.
+
 ## Physical full-power-off test: automatic scan, v0.2.0
 
 **Passed: fresh UTC after 46.743 seconds from boot, following a full power cut.**

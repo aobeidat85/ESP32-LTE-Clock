@@ -1,0 +1,286 @@
+{
+  "test": "Targeted T-Mobile LTE UTC attempt on original ESP32",
+  "board": "ESP32-D0WD-V3 revision 3.1; onboard antenna only; CPU 240 MHz; crystal 40 MHz",
+  "utc_from_tmobile_recovered": false,
+  "production_library_modified": false,
+  "source_commit": "e6d822f7fd848a6eaca6b3f45de5d8ebb9c0c72b",
+  "probe_firmware_sha256": "b657ad6f58276d5c986d0b0d23c33543ff70e07c678b08baf864b2d0e3d0ed2d",
+  "probe_firmware_bytes": 719664,
+  "scope": "Isolated diagnostic copy, two known carrier/PCI profiles. This was not a blind automatic-carrier-selection test and did not qualify T-Mobile UTC support.",
+  "probe_modifications": [
+    "Print freshly decoded SIB1 bytes and diagnostic fields after onboard CRC gates",
+    "End a diagnostic trial after an UnsupportedCell outcome, including a received schedule with no SIB8"
+  ],
+  "known_profile_inputs": [
+    {
+      "carrier_kHz": 2140000,
+      "requested_lo_mhz": 2139,
+      "pci": 242
+    },
+    {
+      "carrier_kHz": 1955000,
+      "requested_lo_mhz": 1954,
+      "pci": 377
+    }
+  ],
+  "per_trial_timeout_ms": 60000,
+  "operator_assignment_sources": [
+    "https://www.t-mobile.com/support/devices/not-sold-by-t-mobile/byod-t-mobile-data-and-apn-settings",
+    "https://www.itu.int/dms_pub/itu-t/opb/sp/T-SP-OB.837-2005-PDF-E.pdf"
+  ],
+  "serial_data_bytes_sent": 0,
+  "reset_requested": true,
+  "pc_role": "Firmware upload, reset and read-only diagnostic observation; independent ASN.1 interpretation of printed SIB1 payload. No host time, RF samples or decoded time supplied to the board.",
+  "host_receipt_times_are_labels_only": true,
+  "fresh_sib1_messages": [
+    {
+      "received_at": "2026-11-04T04:24:39.284292+00:00",
+      "boot_ms": 18968,
+      "carrier_kHz": 2140000,
+      "pci": 242,
+      "onboard_result": 5,
+      "payload_hex": "684c424c17f1ba12fd0382350c60206113091860d8305cfe4a30100e016c9100",
+      "payload_sha256": "e701e26ce6b86be80daa9574e4109db483278995032649ca603928fc9b3ee53d",
+      "onboard_crc_gates": "RF readSystem returned Result::Ok (SI-RNTI CRC16 and transport CRC24) before SIB1 was parsed/emitted",
+      "independent_asn1_decoder": "pycrate 0.8.1 via tests/reference/lte_downlink.py; payload-level identity/schedule verification, not an independent raw-RF CRC check",
+      "decoded_sib1": {
+        "plmns": [
+          {
+            "mcc": "310",
+            "mnc": "260"
+          }
+        ],
+        "tracking_area_code": 32539,
+        "eutran_cell_identity": 169016579,
+        "frequency_band": 4,
+        "scheduling": [
+          {
+            "si-Periodicity": "rf8",
+            "sib-MappingInfo": [
+              "sibType3"
+            ]
+          },
+          {
+            "si-Periodicity": "rf64",
+            "sib-MappingInfo": [
+              "sibType5"
+            ]
+          },
+          {
+            "si-Periodicity": "rf64",
+            "sib-MappingInfo": [
+              "sibType7"
+            ]
+          },
+          {
+            "si-Periodicity": "rf64",
+            "sib-MappingInfo": [
+              "sibType24-v1530"
+            ]
+          }
+        ],
+        "si_window": "ms10",
+        "hyper_sfn": 136,
+        "sib16_advertised": false
+      },
+      "sib8_advertised": false,
+      "sib16_advertised": false
+    }
+  ],
+  "trials": [
+    {
+      "carrier_MHz": 2140,
+      "PCI": 242,
+      "trial": 1,
+      "synced": 0,
+      "status": 8,
+      "captures": 12,
+      "MIBs": 2,
+      "ticks": 0
+    },
+    {
+      "carrier_MHz": 2140,
+      "PCI": 242,
+      "trial": 2,
+      "synced": 0,
+      "status": 6,
+      "captures": 21,
+      "MIBs": 0,
+      "ticks": 0
+    },
+    {
+      "carrier_MHz": 1955,
+      "PCI": 377,
+      "trial": 1,
+      "synced": 0,
+      "status": 6,
+      "captures": 21,
+      "MIBs": 0,
+      "ticks": 0
+    },
+    {
+      "carrier_MHz": 1955,
+      "PCI": 377,
+      "trial": 2,
+      "synced": 0,
+      "status": 6,
+      "captures": 21,
+      "MIBs": 0,
+      "ticks": 0
+    }
+  ],
+  "bench_main_cpp": "#include <Arduino.h>\n#include <Esp32LteClock.h>\n#include <time.h>\nstatic esp32_lte_time::Esp32LteClock clockReceiver;\nstatic void progress(esp32_lte_time::ClockStatus status,const esp32_lte_time::ClockEvidence& e) {\n  static auto last=esp32_lte_time::ClockStatus::Idle;\n  if(status!=last){\n    Serial.printf(\"TMOBILE_PROBE boot_ms=%u status=%u PCI=%u captures=%u MIBs=%u\\n\",millis(),unsigned(status),e.pci,e.captures,e.mibs);\n    last=status;\n  }\n}\nvoid setup(){\n  Serial.begin(115200);\n  Serial.println(\"TMOBILE_PROBE_START live RF, onboard decoding, no host time or serial input\");\n  esp32_lte_time::ClockConfig config;\n  config.autoScan=false;config.cellTimeoutMs=45000;\n  const unsigned carriers[]={2140,1955};\n  const unsigned pcis[]={242,377};\n  for(unsigned profile=0;profile<2;++profile){\n    config.tuningMHz=carriers[profile]-1;config.carrierHz=carriers[profile]*1000000.0;\n    config.pcis[0]=pcis[profile];config.pcis[1]=pcis[profile];\n    for(unsigned trial=1;trial<=2;++trial){\n      Serial.printf(\"TMOBILE_PROBE_TRIAL carrier_MHz=%u PCI=%u trial=%u\\n\",carriers[profile],pcis[profile],trial);\n      bool synced=clockReceiver.sync(60000,config,progress);\n      Serial.printf(\"TMOBILE_PROBE_RESULT carrier_MHz=%u PCI=%u trial=%u synced=%u status=%u captures=%u MIBs=%u ticks=%llu\\n\",carriers[profile],pcis[profile],trial,unsigned(synced),unsigned(clockReceiver.status()),clockReceiver.evidence().captures,clockReceiver.evidence().mibs,(unsigned long long)clockReceiver.evidence().rawTicks);\n      if(synced)break;\n      delay(1000);\n    }\n  }\n  Serial.println(\"TMOBILE_PROBE_DONE\");\n}\nvoid loop(){delay(1000);}\n",
+  "bench_library_patch": "--- src/Esp32LteClock.cpp\n+++ bench/src/Esp32LteClock.cpp\n@@ -119,6 +119,13 @@\n         carrier_-activeTuningMHz_*1000000.0,pci_,5,payload,bytes);\n     if(r!=Result::Ok)continue;\n     r=parseSib1Schedule(payload,bytes,schedule);\n+    if(r==Result::Ok||r==Result::NoTime){\n+      Serial.printf(\"TMOBILE_PROBE_SIB1 boot_ms=%u carrier_kHz=%u PCI=%u result=%u cell=%u band=%u mibs=%u payload=\",\n+          millis(),evidence_.carrier100kHz*100u,pci_,unsigned(r),schedule.cellId,schedule.band,evidence_.mibs);\n+      for(size_t k=0;k<bytes;++k)Serial.printf(\"%02x\",payload[k]);\n+      Serial.println();\n+    }\n+\n     if(r==Result::NoTime){report(ClockStatus::UnsupportedCell);break;}\n     if(r==Result::Ok){evidence_.cellId=schedule.cellId;hasSchedule=true;timeScheduleFound_=true;break;}\n   }\n@@ -224,6 +231,7 @@\n       if(receiveTime(words,stamp,found)){\n         cellDeadline_=0;radio_.end();rf_.release();return true;\n       }\n+      if(status_==ClockStatus::UnsupportedCell){radio_.end();rf_.release();return false;}\n       ++evidence_.rejectedCells;\n       if(config.autoScan){\n         const bool reject=status_==ClockStatus::UnsupportedCell||timeScheduleFound_||slot>=32||\n",
+  "rows": [
+    {
+      "received_at": "2026-11-04T04:24:20.327973+00:00",
+      "observer_elapsed_s": 0.347,
+      "line": "TMOBILE_PROBE_START live RF, onboard decoding, no host time or serial input"
+    },
+    {
+      "received_at": "2026-11-04T04:24:20.331097+00:00",
+      "observer_elapsed_s": 0.35,
+      "line": "TMOBILE_PROBE_TRIAL carrier_MHz=2140 PCI=242 trial=1"
+    },
+    {
+      "received_at": "2026-11-04T04:24:20.415694+00:00",
+      "observer_elapsed_s": 0.435,
+      "line": "TMOBILE_PROBE boot_ms=110 status=1 PCI=65535 captures=0 MIBs=0"
+    },
+    {
+      "received_at": "2026-11-04T04:24:36.928718+00:00",
+      "observer_elapsed_s": 16.948,
+      "line": "TMOBILE_PROBE boot_ms=16624 status=2 PCI=242 captures=6 MIBs=0"
+    },
+    {
+      "received_at": "2026-11-04T04:24:37.866008+00:00",
+      "observer_elapsed_s": 17.885,
+      "line": "TMOBILE_PROBE boot_ms=17561 status=3 PCI=242 captures=9 MIBs=2"
+    },
+    {
+      "received_at": "2026-11-04T04:24:39.284292+00:00",
+      "observer_elapsed_s": 19.304,
+      "line": "TMOBILE_PROBE_SIB1 boot_ms=18968 carrier_kHz=2140000 PCI=242 result=5 cell=169016579 band=4 mibs=2 payload=684c424c17f1ba12fd0382350c60206113091860d8305cfe4a30100e016c9100"
+    },
+    {
+      "received_at": "2026-11-04T04:24:39.289903+00:00",
+      "observer_elapsed_s": 19.309,
+      "line": "TMOBILE_PROBE boot_ms=18980 status=8 PCI=242 captures=12 MIBs=2"
+    },
+    {
+      "received_at": "2026-11-04T04:24:39.297086+00:00",
+      "observer_elapsed_s": 19.316,
+      "line": "TMOBILE_PROBE_RESULT carrier_MHz=2140 PCI=242 trial=1 synced=0 status=8 captures=12 MIBs=2 ticks=0"
+    },
+    {
+      "received_at": "2026-11-04T04:24:40.298774+00:00",
+      "observer_elapsed_s": 20.318,
+      "line": "TMOBILE_PROBE_TRIAL carrier_MHz=2140 PCI=242 trial=2"
+    },
+    {
+      "received_at": "2026-11-04T04:24:40.313751+00:00",
+      "observer_elapsed_s": 20.333,
+      "line": "TMOBILE_PROBE boot_ms=20009 status=1 PCI=65535 captures=0 MIBs=0"
+    },
+    {
+      "received_at": "2026-11-04T04:25:40.354172+00:00",
+      "observer_elapsed_s": 80.374,
+      "line": "TMOBILE_PROBE boot_ms=80049 status=6 PCI=65535 captures=21 MIBs=0"
+    },
+    {
+      "received_at": "2026-11-04T04:25:40.360195+00:00",
+      "observer_elapsed_s": 80.38,
+      "line": "TMOBILE_PROBE_RESULT carrier_MHz=2140 PCI=242 trial=2 synced=0 status=6 captures=21 MIBs=0 ticks=0"
+    },
+    {
+      "received_at": "2026-11-04T04:25:41.361062+00:00",
+      "observer_elapsed_s": 81.38,
+      "line": "TMOBILE_PROBE_TRIAL carrier_MHz=1955 PCI=377 trial=1"
+    },
+    {
+      "received_at": "2026-11-04T04:25:41.376135+00:00",
+      "observer_elapsed_s": 81.396,
+      "line": "TMOBILE_PROBE boot_ms=81074 status=1 PCI=65535 captures=0 MIBs=0"
+    },
+    {
+      "received_at": "2026-11-04T04:26:41.418606+00:00",
+      "observer_elapsed_s": 141.438,
+      "line": "TMOBILE_PROBE boot_ms=141116 status=6 PCI=65535 captures=21 MIBs=0"
+    },
+    {
+      "received_at": "2026-11-04T04:26:41.424683+00:00",
+      "observer_elapsed_s": 141.444,
+      "line": "TMOBILE_PROBE_RESULT carrier_MHz=1955 PCI=377 trial=1 synced=0 status=6 captures=21 MIBs=0 ticks=0"
+    },
+    {
+      "received_at": "2026-11-04T04:26:42.425649+00:00",
+      "observer_elapsed_s": 142.445,
+      "line": "TMOBILE_PROBE_TRIAL carrier_MHz=1955 PCI=377 trial=2"
+    },
+    {
+      "received_at": "2026-11-04T04:26:42.440798+00:00",
+      "observer_elapsed_s": 142.46,
+      "line": "TMOBILE_PROBE boot_ms=142141 status=1 PCI=65535 captures=0 MIBs=0"
+    },
+    {
+      "received_at": "2026-11-04T04:27:42.493102+00:00",
+      "observer_elapsed_s": 202.513,
+      "line": "TMOBILE_PROBE boot_ms=202193 status=6 PCI=65535 captures=21 MIBs=0"
+    },
+    {
+      "received_at": "2026-11-04T04:27:42.499124+00:00",
+      "observer_elapsed_s": 202.519,
+      "line": "TMOBILE_PROBE_RESULT carrier_MHz=1955 PCI=377 trial=2 synced=0 status=6 captures=21 MIBs=0 ticks=0"
+    },
+    {
+      "received_at": "2026-11-04T04:27:43.497382+00:00",
+      "observer_elapsed_s": 203.517,
+      "line": "TMOBILE_PROBE_DONE"
+    }
+  ],
+  "restoration": {
+    "production_firmware_restored": true,
+    "firmware_sha256": "ee10a97dff4dcaae620932cbaf49346ab9d9062e085f39b20bade5a246f3d5d8",
+    "method": "esptool write_flash app at 0x10000, keep flash parameters; write hash verified",
+    "production_source_unchanged": true,
+    "software_boot_verified": true,
+    "restoration_rows": [
+      {
+        "received_at": "2026-11-04T04:29:54.548844+00:00",
+        "observer_elapsed_s": 0.351,
+        "line": "Receiving UTC from LTE using the onboard antenna..."
+      },
+      {
+        "received_at": "2026-11-04T04:29:54.640637+00:00",
+        "observer_elapsed_s": 0.443,
+        "line": "LTE boot_ms=109 status=1 carrier_kHz=2155000 PCI=65535 captures=0 MIBs=0"
+      },
+      {
+        "received_at": "2026-11-04T04:30:13.496685+00:00",
+        "observer_elapsed_s": 19.299,
+        "line": "LTE boot_ms=18966 status=1 carrier_kHz=2150000 PCI=65535 captures=24 MIBs=0"
+      },
+      {
+        "received_at": "2026-11-04T04:30:32.910953+00:00",
+        "observer_elapsed_s": 38.714,
+        "line": "LTE boot_ms=38381 status=1 carrier_kHz=2160000 PCI=65535 captures=48 MIBs=0"
+      },
+      {
+        "received_at": "2026-11-04T04:30:51.756981+00:00",
+        "observer_elapsed_s": 57.56,
+        "line": "LTE boot_ms=57228 status=1 carrier_kHz=2145000 PCI=65535 captures=72 MIBs=0"
+      },
+      {
+        "received_at": "2026-11-04T04:31:10.605345+00:00",
+        "observer_elapsed_s": 76.408,
+        "line": "LTE boot_ms=76077 status=1 carrier_kHz=2165000 PCI=65535 captures=96 MIBs=0"
+      },
+      {
+        "received_at": "2026-11-04T04:31:29.445477+00:00",
+        "observer_elapsed_s": 95.248,
+        "line": "LTE boot_ms=94918 status=1 carrier_kHz=2140000 PCI=65535 captures=120 MIBs=0"
+      }
+    ],
+    "scope": "Automatic scan restarted from default first visit with no PCI hint; a new UTC synchronization was not awaited. The diagnostic probe is no longer installed."
+  }
+}
