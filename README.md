@@ -112,14 +112,16 @@ frequency or PCI in the default configuration. Blind PSS correlations use FFTs;
 all 504 PCI values are eligible through SSS correlation.
 
 Defaults take 24 snapshots per frequency and allow up to 180 seconds for an
-individual candidate. Rejected PCIs are skipped for the remainder of that dwell,
-so another cell can be considered. Multiple scans or a long search may be needed;
+individual attempt, with up to three fresh attempts per discovered PCI before
+moving on. A verified unsupported profile or time schedule is skipped immediately.
+Rejected PCIs are skipped for the remainder of that dwell, so another cell can
+be considered. Multiple scans or a long search may be needed;
 a full raster scan can take hours. The timeout is checked between bounded DSP
 operations and can overrun while the current operation ends. Gain-table index
 68 is configurable and is not calibrated dB.
 
 For a constrained application, `ClockConfig` exposes `capturesPerFrequency`,
-`cellTimeoutMs`, and `gainIndex`. Manual mode is still available: set
+`cellTimeoutMs`, `cellAttempts`, and `gainIndex`. Manual mode is still available: set
 `autoScan=false` and explicitly supply `tuningMHz`, `carrierHz`, and `pcis`.
 Those manual hint fields default to zero and are ignored during automatic scan.
 

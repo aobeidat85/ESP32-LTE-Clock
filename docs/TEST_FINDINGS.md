@@ -23,7 +23,9 @@ Default configuration now scans frequency and derives PCI from PSS/SSS without
 carrier/PCI hints. The full deterministic plan contains 2,730 distinct 100 kHz
 points over five reachable FDD downlink ranges. It tries 5 MHz centers first,
 then all other raster points. Each frequency gets 24 snapshots; a candidate gets
-up to 180 seconds for fresh MIBs, SIB1 scheduling and SIB8 time. A timeout/retry
+up to 180 seconds per attempt for fresh MIBs, SIB1 scheduling and SIB8 time.
+Fading/CRC failures permit up to three attempts per discovered PCI; a verified
+unsupported profile or schedule is excluded immediately. A timeout/retry
 continues the scan cursor. These limits bound attempts, not total acquisition
 time; a complete raster search can take hours.
 
@@ -41,6 +43,15 @@ later shorter-budget run found **2150 MHz, PCI 284** and its time schedule but
 exhausted the initial 60-second per-cell budget before UTC. That observation led
 to the release's 180-second budget. Synchronization hypotheses are not treated
 as verified cells or time; MIB and transport CRC checks remain mandatory.
+The [initial discovery trace](evidence/auto-scan-discovery-results.json) and
+[short-budget trace](evidence/auto-scan-short-budget-results.json) retain both
+observations. These are software-reset tests, not physical power-off tests.
+
+Both the Linux native-test and ESP32 firmware-build jobs passed on GitHub
+([v0.2 implementation validation](https://github.com/aobeidat85/ESP32-LTE-Clock/actions/runs/41769112164)).
+The release example uses 730,837 bytes of flash and 43,284 bytes of static RAM;
+dynamic workspace is approximately 141 KB, including the 40 KB IRAM arena.
+All three capture-SRAM overlap assertions remain present in the link map.
 
 Scanning does not extend the SIB8/time transport profile: 50 RB, four antenna
 ports, Ng=1, normal-CP FDD remain the qualified time-decoder parameters. Discovery

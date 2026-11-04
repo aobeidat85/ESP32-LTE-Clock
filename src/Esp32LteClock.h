@@ -12,6 +12,7 @@ struct ClockConfig {
   bool autoScan = true;
   uint8_t capturesPerFrequency = 24;
   uint32_t cellTimeoutMs = 180000;
+  uint8_t cellAttempts = 3;
   // Optional legacy/manual mode: set autoScan=false to use these hints.
   uint16_t tuningMHz = 0;
   double carrierHz = 0;

@@ -151,6 +151,7 @@ bool Esp32LteClock::sync(uint32_t timeoutMs,const ClockConfig& config,ClockProgr
   if(!timeoutMs||timeoutMs>3600000||!config.maxObservationAgeUs||
      !config.capturesPerFrequency||config.capturesPerFrequency>32||
      !config.cellTimeoutMs||config.cellTimeoutMs>3600000||
+     !config.cellAttempts||config.cellAttempts>8||
      (!config.autoScan&&(!std::isfinite(config.carrierHz)||
        std::fabs(config.carrierHz-config.tuningMHz*1000000.0)>6000000||
        config.pcis[0]>503||config.pcis[1]>503))){
@@ -177,13 +178,16 @@ bool Esp32LteClock::sync(uint32_t timeoutMs,const ClockConfig& config,ClockProgr
   rf_.service=serviceClockDecoder;
   rf_.cancelled=[](void* context){return static_cast<Esp32LteClock*>(context)->expired();};
   rf_.cancelContext=this;
-  unsigned dwell=0,excludedCount=0;
+  unsigned dwell=0,excludedCount=0,attemptedCount=0;
   uint16_t excluded[32]={};
+  uint16_t attemptedPci[32]={};
+  uint8_t attempts[32]={};
   while(esp_timer_get_time()<deadline_){
     cellDeadline_=0;
     if(config.autoScan&&dwell>=config.capturesPerFrequency){
       scanCursor_=(scanCursor_+1)%CellScanPlan::count();selectFrequency();
-      dwell=0;excludedCount=0;
+      dwell=0;excludedCount=0;attemptedCount=0;
+      std::memset(attempts,0,sizeof(attempts));
       if(!radio_.tune(activeTuningMHz_)){
         evidence_.radioError=uint8_t(radio_.lastError());
         radio_.end();rf_.release();report(ClockStatus::RadioError);return false;
@@ -206,6 +210,10 @@ bool Esp32LteClock::sync(uint32_t timeoutMs,const ClockConfig& config,ClockProgr
       evidence_.pssScore=rf_.pssPeak;evidence_.sssScore=rf_.sssPeak;
       if(!found.found)continue;
       pci_=found.pci;evidence_.pci=pci_;++evidence_.discoveredCells;
+      unsigned slot=0;
+      for(;slot<attemptedCount;++slot)if(attemptedPci[slot]==pci_)break;
+      if(slot==attemptedCount&&attemptedCount<32)attemptedPci[attemptedCount++]=pci_;
+      if(slot<32)++attempts[slot];
       evidence_.cellId=0;
       evidence_.pssScore=found.pssScore;evidence_.sssScore=found.sssScore;
       cellDeadline_=esp_timer_get_time()+int64_t(config.cellTimeoutMs)*1000;
@@ -213,7 +221,12 @@ bool Esp32LteClock::sync(uint32_t timeoutMs,const ClockConfig& config,ClockProgr
         cellDeadline_=0;radio_.end();rf_.release();return true;
       }
       ++evidence_.rejectedCells;
-      if(config.autoScan&&excludedCount<32)excluded[excludedCount++]=pci_;
+      if(config.autoScan){
+        const bool reject=status_==ClockStatus::UnsupportedCell||slot>=32||
+                          attempts[slot]>=config.cellAttempts;
+        if(reject){if(excludedCount<32)excluded[excludedCount++]=pci_;}
+        else dwell=0; // Fade/CRC failure: bounded fresh discovery on this carrier.
+      }
       cellDeadline_=0;
       break; // Acquisition replaced the borrowed raw sample lease.
     }

@@ -1,0 +1,48 @@
+{
+  "test": "24 snapshots; initial 60-second candidate budget exhausted before UTC; superseded by 180 seconds",
+  "board": "ESP32-D0WD-V3 revision 3.1; onboard antenna; 240 MHz / 40 MHz crystal",
+  "observer": "tools/observe_boot.py; RTS reset; no physical power removal; zero serial data bytes sent",
+  "utc_synchronized": false,
+  "rows": [
+    {
+      "received_at": "2026-11-04T03:42:14.013362+00:00",
+      "observer_elapsed_s": 0.442,
+      "line": "LTE boot_ms=109 status=1 carrier_kHz=2155000 PCI=0 captures=0 MIBs=0"
+    },
+    {
+      "received_at": "2026-11-04T03:42:32.957659+00:00",
+      "observer_elapsed_s": 19.387,
+      "line": "LTE boot_ms=19054 status=1 carrier_kHz=2150000 PCI=0 captures=24 MIBs=0"
+    },
+    {
+      "received_at": "2026-11-04T03:42:51.876001+00:00",
+      "observer_elapsed_s": 38.305,
+      "line": "LTE boot_ms=37973 status=2 carrier_kHz=2150000 PCI=284 captures=48 MIBs=0"
+    },
+    {
+      "received_at": "2026-11-04T03:42:54.419273+00:00",
+      "observer_elapsed_s": 40.848,
+      "line": "LTE boot_ms=40516 status=3 carrier_kHz=2150000 PCI=284 captures=57 MIBs=2"
+    },
+    {
+      "received_at": "2026-11-04T03:43:40.918615+00:00",
+      "observer_elapsed_s": 87.348,
+      "line": "LTE boot_ms=87017 status=4 carrier_kHz=2150000 PCI=284 captures=69 MIBs=2"
+    },
+    {
+      "received_at": "2026-11-04T03:43:51.902036+00:00",
+      "observer_elapsed_s": 98.331,
+      "line": "LTE boot_ms=98001 status=1 carrier_kHz=2160000 PCI=284 captures=72 MIBs=2"
+    },
+    {
+      "received_at": "2026-11-04T03:44:10.820822+00:00",
+      "observer_elapsed_s": 117.25,
+      "line": "LTE boot_ms=116921 status=1 carrier_kHz=2145000 PCI=284 captures=96 MIBs=2"
+    },
+    {
+      "received_at": "2026-11-04T03:44:29.751147+00:00",
+      "observer_elapsed_s": 136.18,
+      "line": "LTE boot_ms=135852 status=1 carrier_kHz=2165000 PCI=284 captures=120 MIBs=2"
+    }
+  ]
+}
