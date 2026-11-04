@@ -34,8 +34,8 @@ struct SiSchedule {
   bool hasSib8 = false;
 };
 Result parseSib1Schedule(const uint8_t* payload, size_t bytes, SiSchedule& schedule);
-// Visit every millisecond of a received SI window, interleaving its frames.
-// Returns -1 for an invalid window; repeats after windowMs attempts.
+// Visit every millisecond of a received SI window, interleaving its frames
+// and retries at the window start. Repeats after 2*windowMs-1 attempts.
 int siWindowOffset(unsigned windowMs, unsigned attempt);
 bool fitFramePeriod(double firstUptimeUs, unsigned firstSfn, double lastUptimeUs,
                     unsigned lastSfn, double& periodUs);

@@ -121,8 +121,9 @@ before moving on. A verified unsupported profile or time schedule is skipped
 immediately. A cell that advertises time but exhausts its scheduled time attempts
 yields to another PCI on that carrier instead of consuming every retry budget.
 Time acquisition searches offsets throughout the received SIB1 SI window,
-interleaving its radio frames; it does not assume transmission at the window's
-first subframe. The per-cell deadline still applies during this search.
+interleaving its radio frames and retries at the window start to tolerate fading;
+it does not require transmission at the first subframe. The per-cell deadline
+still applies during this search.
 Rejected PCIs are skipped for the remainder of that dwell, so another cell can
 be considered. Multiple scans or a long search may be needed;
 a full raster scan can take hours. The timeout is checked between bounded DSP

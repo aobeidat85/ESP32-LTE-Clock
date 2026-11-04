@@ -185,7 +185,8 @@ Complex RfDecoder::timeSample(size_t index) const {
 
 int siWindowOffset(unsigned windowMs,unsigned attempt) {
   if(!windowMs||windowMs>40)return -1;
-  unsigned index=attempt%windowMs;
+  const unsigned step=attempt%(2*windowMs-1);
+  unsigned index=step%2?(step+1)/2:0;
   for(unsigned subframe=0;subframe<10;++subframe)
     for(unsigned offset=subframe;offset<windowMs;offset+=10)
       if(index--==0)return int(offset);

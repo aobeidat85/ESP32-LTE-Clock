@@ -12,10 +12,12 @@ from scipy.signal import resample_poly
 @pytest.mark.parametrize('window',[1,2,5,10,15,20,40])
 def test_entire_advertised_si_window_is_searched(native,window):
     offsets=run(native,'siwindow',window)
-    assert sorted(offsets[:window])==list(range(window))
-    assert offsets[:window]==offsets[window:]
-    assert offsets[:min(4,(window+9)//10)]==list(range(0,window,10))[:4]
-    if window==20:assert offsets[:4]==[0,10,1,11]
+    period=2*window-1
+    assert sorted(set(offsets[:period]))==list(range(window))
+    assert offsets[:period]==offsets[period:]
+    assert offsets[:period:2]==[0]*window
+    if window==20:assert offsets[:8]==[0,10,0,1,0,11,0,2]
+    if window==40:assert offsets[:6]==[0,10,0,20,0,30]
 
 
 def test_invalid_si_windows_are_rejected(native):

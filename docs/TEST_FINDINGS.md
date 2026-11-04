@@ -76,9 +76,17 @@ observations. These are software-reset tests, not physical power-off tests.
 
 Both the Linux native-test and ESP32 firmware-build jobs passed on GitHub
 ([v0.2 implementation validation](https://github.com/aobeidat85/ESP32-LTE-Clock/actions/runs/41769112164)).
-The release example uses 730,957 bytes of flash and 43,284 bytes of static RAM;
+The release example uses 730,973 bytes of flash and 43,284 bytes of static RAM;
 dynamic workspace is approximately 141 KB, including the 40 KB IRAM arena.
 All three capture-SRAM overlap assertions remain present in the link map.
+
+A subsequent [full-window trial](evidence/auto-scan-window-trial-results.json)
+obtained MIBs and SIB1 on PCI 284 but exhausted its time-reading budget without
+UTC, then correctly tried PCI 283. That exploratory observation was stopped
+during further acquisition. The final traversal interleaves retries at the
+announced window start with other offsets, preserving repeated opportunities
+there under fading while still searching the rest of the window. Automated
+tests verify both complete offset coverage and these start-window retries.
 
 Scanning does not extend the SIB8/time transport profile: 50 RB, four antenna
 ports, Ng=1, normal-CP FDD remain the qualified time-decoder parameters. Discovery

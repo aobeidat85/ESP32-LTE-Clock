@@ -14,7 +14,7 @@ static RfDecoder rf;
 int main(int argc, char** argv) {
   if(argc==3&&!std::strcmp(argv[1],"siwindow")){
     unsigned window=std::atoi(argv[2]);std::printf("[");
-    for(unsigned i=0;i<(window&&window<=40?window*2:1);++i)
+    for(unsigned i=0;i<(window&&window<=40?(2*window-1)*2:1);++i)
       std::printf("%s%d",i?",":"",siWindowOffset(window,i));
     std::printf("]\n");return 0;
   }
