@@ -19,6 +19,20 @@ manufacturer, or this result as support for ESP32-C3, S3, C5, or every ESP32 mod
 
 ## v0.2 automatic discovery validation
 
+**The final firmware synchronized from live LTE after 70.000 seconds from boot**
+on the stated board. With default configuration and zero manual frequency/PCI
+hints, it scanned 2155 MHz, moved to 2150 MHz and derived PCI 284. Two agreeing
+MIBs and fresh SIB8 from cell 45012513 established UTC, across 62 capture windows.
+Counter **147780058756** independently converts to reference UTC
+**2026-11-04 04:09:29.560Z**; the board printed advancing UTC at `04:09:30Z`,
+`04:09:31Z`, and `04:09:32Z` after releasing RF/DSP allocations.
+
+The [final release evidence](evidence/auto-scan-release-results.json) retains the
+exact tested source commit, firmware SHA-256, default settings and serial trace.
+The observer reset through RTS and sent zero serial data bytes. This verifies
+fresh automatic reception after reset; it is not an additional physical USB
+power-cut test. Absolute UTC accuracy remains uncalibrated.
+
 Default configuration now scans frequency and derives PCI from PSS/SSS without
 carrier/PCI hints. The full deterministic plan contains 2,730 distinct 100 kHz
 points over five reachable FDD downlink ranges. It tries 5 MHz centers first,
@@ -75,7 +89,7 @@ The [initial discovery trace](evidence/auto-scan-discovery-results.json) and
 observations. These are software-reset tests, not physical power-off tests.
 
 Both the Linux native-test and ESP32 firmware-build jobs passed on GitHub
-([v0.2 implementation validation](https://github.com/aobeidat85/ESP32-LTE-Clock/actions/runs/41769112164)).
+([final implementation validation](https://github.com/aobeidat85/ESP32-LTE-Clock/actions/runs/41771332627)).
 The release example uses 730,973 bytes of flash and 43,284 bytes of static RAM;
 dynamic workspace is approximately 141 KB, including the 40 KB IRAM arena.
 All three capture-SRAM overlap assertions remain present in the link map.

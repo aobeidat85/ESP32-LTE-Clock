@@ -89,10 +89,12 @@ See [test findings and hardware details](docs/TEST_FINDINGS.md) and the
 Historical prototype evidence is clearly separated from package validation.
 The extracted standalone example was also flashed to the same board and
 successfully set UTC from fresh live LTE after an upload reset and one retry.
-Automatic discovery also set UTC after **151.740 seconds from boot**, scanning
-from 2155 to 2150 MHz and falling back from PCI 283 to PCI 284. The findings
-identify that hardware revision separately from the subsequent SI-window-search
-extension and retain unsuccessful observations as well.
+The **final automatic-scan firmware set UTC after 70.000 seconds from boot**:
+it scanned from 2155 to 2150 MHz, derived PCI 284 and read fresh time without
+frequency/PCI hints. An earlier automatic test took 151.740 seconds, including
+fallback from PCI 283 to PCI 284. The findings retain unsuccessful observations
+as well. These tests used RTS reset; the physical power-cut result above is
+historical prototype evidence.
 
 ## Configuration and limits
 
