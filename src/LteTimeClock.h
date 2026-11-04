@@ -5,7 +5,7 @@
 #include <sys/time.h>
 
 namespace esp32_lte_time {
-// Integration hook for a future LIVE acquisition path. The caller must supply
+// Clock-setting hook used by live acquisition. The caller must supply
 // the device uptime corresponding to the SIB8 SI-window reference boundary,
 // derived from this boot's LTE frame clock. Never pass a replay observation.
 // A false return leaves the caller responsible for reporting failure to sync.
